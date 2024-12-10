@@ -45,9 +45,11 @@
             @using (Html.BeginForm("Search", "Home", FormMethod.Get))
             {
                 <div class=" me-3" id="searchBar">
-                    <input type="text" name="searchTerm" class="form-control rounded" placeholder="Tìm kiếm" value="@ViewBag.SearchTerm" />
+                    <input type="text" name="searchTerm" class="form-control rounded" placeholder="Tìm kiếm"
+                           value="@ViewBag.SearchTerm" onkeypress="if(event.key === 'Enter'){ this.form.submit(); }" />
                 </div>
             }
+
             <ul class="navbar-nav d-flex flex-row">
                 <li class="nav-item dropdown custom-nav-item">
                     <a href="#" class="nav-link custom-nav-link p-0" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="true">

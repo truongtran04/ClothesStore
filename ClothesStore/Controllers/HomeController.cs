@@ -110,6 +110,74 @@ namespace ClothesStore.Controllers
             var cate = db.Categories.Where(cat => cat.IsHidden == false).ToList();
             return View(cate);
         }
+        public ActionResult _ProductType()
+        {
+            var productTypes = db.ClothingTypes.ToList(); // Thay đổi db thành DbContext của bạn và sửa query để lấy loại sản phẩm
+            return PartialView(productTypes);
+        }
+
+        //public ActionResult Search(string searchTerm, int? page, string sort)
+        //{
+        //    int pageSize = 12;
+        //    int pageNumber = (page ?? 1);
+
+        //    if (string.IsNullOrEmpty(searchTerm))
+        //    {
+        //        return RedirectToAction("Index");
+        //    }
+
+        //    // Lọc sản phẩm
+        //    var query = db.Clothes.AsQueryable();
+        //    query = query.Where(c =>
+        //        c.ClothesName.Contains(searchTerm) ||
+        //        db.Categories.Any(cat => cat.CategoryID == c.CategoryID && cat.CategoryName.Contains(searchTerm))
+        //    );
+
+        //    // Sắp xếp sản phẩm
+        //    switch (sort)
+        //    {
+        //        case "newest":
+        //            query = query.OrderByDescending(c => c.CreatedAt);
+        //            break;
+        //        case "price_asc":
+        //            query = query.OrderBy(c => c.Price);
+        //            break;
+        //        case "price_desc":
+        //            query = query.OrderByDescending(c => c.Price);
+        //            break;
+        //        default:
+        //            break;
+        //    }
+
+        //    // Chuyển đổi sang ViewModel
+        //    var searchResults = query.Where(clo => clo.IsDeleted == false)
+        //        .Select(c => new ClothesViewModel
+        //        {
+        //            ClothesItem = c,
+        //            Images = db.Images.Where(img => img.ClothesID == c.ClothesID).ToList(),
+        //            Clothes_Color_Sizes = db.Clothes_Color_Size.Where(clo => clo.ClothesID == c.ClothesID).ToList(),
+        //            Colors = db.Colors
+        //                .Where(col => db.Images.Any(img => img.ColorID == col.ColorID && img.ClothesID == c.ClothesID))
+        //                .ToList(),
+        //            Sizes = db.Sizes
+        //                .Where(size => db.Clothes_Color_Size
+        //                    .Any(clo => clo.SizeID == size.SizeID && clo.ClothesID == c.ClothesID
+        //                                 && clo.ColorID == db.Colors
+        //                                    .Where(col => db.Images.Any(img => img.ColorID == col.ColorID && img.ClothesID == c.ClothesID))
+        //                                    .Select(col => col.ColorID).FirstOrDefault()))
+        //                .ToList()
+        //        })
+        //        .ToList();
+
+        //    var pagedResults = searchResults.ToPagedList(pageNumber, pageSize);
+
+        //    if (Request.IsAjaxRequest())
+        //    {
+        //        return PartialView("_ClothesList", pagedResults);
+        //    }
+        //    ViewBag.SearchTerm = searchTerm;
+        //    return View("Search", pagedResults);
+        //}
 
         public ActionResult Search(string searchTerm, int? page, string sort)
         {
@@ -122,10 +190,10 @@ namespace ClothesStore.Controllers
             }
 
             // Lọc sản phẩm
-            var query = db.Clothes.AsQueryable();
-            query = query.Where(c =>
-                c.ClothesName.Contains(searchTerm) ||
-                db.Categories.Any(cat => cat.CategoryID == c.CategoryID && cat.CategoryName.Contains(searchTerm))
+            var searchTermLower = searchTerm.ToLower(); // Chuyển đổi từ khóa thành chữ thường
+            var query = db.Clothes.AsQueryable().Where(c =>
+                c.ClothesName.ToLower().Contains(searchTermLower) ||
+                db.Categories.Any(cat => cat.CategoryName.ToLower().Contains(searchTermLower))
             );
 
             // Sắp xếp sản phẩm
@@ -173,6 +241,8 @@ namespace ClothesStore.Controllers
             ViewBag.SearchTerm = searchTerm;
             return View("Search", pagedResults);
         }
+
+
 
     }
 }

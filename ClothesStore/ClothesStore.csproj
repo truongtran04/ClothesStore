@@ -409,6 +409,7 @@
     <Content Include="Content\images\colors\trang.jpg" />
     <Content Include="Content\images\logo_2.png" />
     <Content Include="Content\PagedList.css" />
+    <Content Include="Content\Site.css" />
     <Content Include="Global.asax" />
     <Content Include="Models\Shopping.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -4926,6 +4927,7 @@
     <Content Include="Views\Home\_ClothesList.cshtml" />
     <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Shared\_PartialFooter.cshtml" />
+    <Content Include="Views\Home\_ProductType.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
