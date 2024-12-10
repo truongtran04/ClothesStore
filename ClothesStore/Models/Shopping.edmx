@@ -4,19 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="TESTModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="Account">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Username" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Password" Type="nvarchar" MaxLength="255" Nullable="false" />
-          <Property Name="Email" Type="nvarchar" MaxLength="100" Nullable="false" />
-          <Property Name="FullName" Type="nvarchar" MaxLength="100" />
-          <Property Name="DateCreated" Type="datetime" />
-          <Property Name="IsActive" Type="bit" />
-        </EntityType>
+      <Schema Namespace="ClothesModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Cart">
           <Key>
             <PropertyRef Name="CartID" />
@@ -40,7 +28,6 @@
           <Property Name="ColorID" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Quantity" Type="int" Nullable="false" />
           <Property Name="Price" Type="decimal" Precision="18" Scale="2" Nullable="false" />
-          <Property Name="UserID" Type="int" />
           <Property Name="TotalPrice" Type="decimal" Precision="29" Scale="2" StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="Category">
@@ -82,7 +69,6 @@
           <Property Name="ClothingTypeID" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="ClothingStyleID" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="IsDeleted" Type="bit" />
-          <Property Name="StockQuantity" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Clothes_Color_Size">
           <Key>
@@ -119,7 +105,7 @@
           <Property Name="ColorID" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="ColorName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="ImageColor" Type="nvarchar" MaxLength="255" Nullable="false" />
-          <Property Name="UrlImage" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="UrlImage" Type="nvarchar(max)" Nullable="false" />
           <Property Name="IsHidden" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Image">
@@ -200,13 +186,6 @@
           <Property Name="DateOfBirth" Type="date" />
           <Property Name="Gender" Type="nvarchar" MaxLength="10" />
         </EntityType>
-        <EntityType Name="Roles">
-          <Key>
-            <PropertyRef Name="RoleId" />
-          </Key>
-          <Property Name="RoleId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="RoleName" Type="nvarchar" MaxLength="50" Nullable="false" />
-        </EntityType>
         <EntityType Name="Size">
           <Key>
             <PropertyRef Name="SizeID" />
@@ -214,16 +193,6 @@
           <Property Name="SizeID" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="SizeName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="IsHidden" Type="bit" Nullable="false" />
-        </EntityType>
-        <EntityType Name="sysdiagrams">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="principal_id" Type="int" Nullable="false" />
-          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="version" Type="int" />
-          <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
         <EntityType Name="UserRoles">
           <Key>
@@ -244,7 +213,7 @@
           <Property Name="CreatedAt" Type="datetime" />
           <Property Name="IsActive" Type="bit" />
         </EntityType>
-        <Association Name="FK__Cart__UserID__634EBE90">
+        <Association Name="FK__Cart__UserID__73BA3083">
           <End Role="Users" Type="Self.Users" Multiplicity="1" />
           <End Role="Cart" Type="Self.Cart" Multiplicity="*" />
           <ReferentialConstraint>
@@ -256,7 +225,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__CartDetai__CartI__662B2B3B">
+        <Association Name="FK__CartDetai__CartI__76969D2E">
           <End Role="Cart" Type="Self.Cart" Multiplicity="1" />
           <End Role="CartDetail" Type="Self.CartDetail" Multiplicity="*" />
           <ReferentialConstraint>
@@ -268,7 +237,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Category___Categ__787EE5A0">
+        <Association Name="FK__Category___Categ__403A8C7D">
           <End Role="Category" Type="Self.Category" Multiplicity="1" />
           <End Role="Category_ClothingType" Type="Self.Category_ClothingType" Multiplicity="*" />
           <ReferentialConstraint>
@@ -280,7 +249,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Category___Cloth__797309D9">
+        <Association Name="FK__Category___Cloth__412EB0B6">
           <End Role="ClothingType" Type="Self.ClothingType" Multiplicity="1" />
           <End Role="Category_ClothingType" Type="Self.Category_ClothingType" Multiplicity="*" />
           <ReferentialConstraint>
@@ -292,7 +261,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Clothes__Categor__0C85DE4D">
+        <Association Name="FK__Clothes__Categor__4CA06362">
           <End Role="Category" Type="Self.Category" Multiplicity="1" />
           <End Role="Clothes" Type="Self.Clothes" Multiplicity="*" />
           <ReferentialConstraint>
@@ -304,7 +273,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Clothes__Clothin__0D7A0286">
+        <Association Name="FK__Clothes__Clothin__4D94879B">
           <End Role="ClothingType" Type="Self.ClothingType" Multiplicity="1" />
           <End Role="Clothes" Type="Self.Clothes" Multiplicity="*" />
           <ReferentialConstraint>
@@ -316,7 +285,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Clothes__Clothin__0E6E26BF">
+        <Association Name="FK__Clothes__Clothin__4E88ABD4">
           <End Role="ClothingStyle" Type="Self.ClothingStyle" Multiplicity="1" />
           <End Role="Clothes" Type="Self.Clothes" Multiplicity="*" />
           <ReferentialConstraint>
@@ -328,7 +297,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Clothes_C__Cloth__123EB7A3">
+        <Association Name="FK__Clothes_C__Cloth__59FA5E80">
           <End Role="Clothes" Type="Self.Clothes" Multiplicity="1" />
           <End Role="Clothes_Color_Size" Type="Self.Clothes_Color_Size" Multiplicity="*" />
           <ReferentialConstraint>
@@ -340,7 +309,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Clothes_C__Color__1332DBDC">
+        <Association Name="FK__Clothes_C__Color__5AEE82B9">
           <End Role="Color" Type="Self.Color" Multiplicity="1" />
           <End Role="Clothes_Color_Size" Type="Self.Clothes_Color_Size" Multiplicity="*" />
           <ReferentialConstraint>
@@ -352,7 +321,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Clothes_C__SizeI__14270015">
+        <Association Name="FK__Clothes_C__SizeI__5BE2A6F2">
           <End Role="Size" Type="Self.Size" Multiplicity="1" />
           <End Role="Clothes_Color_Size" Type="Self.Clothes_Color_Size" Multiplicity="*" />
           <ReferentialConstraint>
@@ -364,7 +333,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__ClothingS__Cloth__7D439ABD">
+        <Association Name="FK__ClothingS__Cloth__44FF419A">
           <End Role="ClothingType" Type="Self.ClothingType" Multiplicity="1" />
           <End Role="ClothingStyle" Type="Self.ClothingStyle" Multiplicity="*" />
           <ReferentialConstraint>
@@ -376,7 +345,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Image__ClothesID__18EBB532">
+        <Association Name="FK__Image__ClothesID__60A75C0F">
           <End Role="Clothes" Type="Self.Clothes" Multiplicity="1" />
           <End Role="Image" Type="Self.Image" Multiplicity="*" />
           <ReferentialConstraint>
@@ -388,7 +357,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Image__ColorID__19DFD96B">
+        <Association Name="FK__Image__ColorID__619B8048">
           <End Role="Color" Type="Self.Color" Multiplicity="1" />
           <End Role="Image" Type="Self.Image" Multiplicity="*" />
           <ReferentialConstraint>
@@ -400,7 +369,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__OrderDeta__Order__5AB9788F">
+        <Association Name="FK__OrderDeta__Order__7E37BEF6">
           <End Role="Orders" Type="Self.Orders" Multiplicity="0..1" />
           <End Role="OrderDetails" Type="Self.OrderDetails" Multiplicity="*" />
           <ReferentialConstraint>
@@ -412,7 +381,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Orders__UserID__51300E55">
+        <Association Name="FK__Orders__UserID__7B5B524B">
           <End Role="Users" Type="Self.Users" Multiplicity="1" />
           <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
           <ReferentialConstraint>
@@ -424,7 +393,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Payments__OrderI__55F4C372">
+        <Association Name="FK__Payments__OrderI__02FC7413">
           <End Role="Orders" Type="Self.Orders" Multiplicity="1" />
           <End Role="Payments" Type="Self.Payments" Multiplicity="*" />
           <ReferentialConstraint>
@@ -436,7 +405,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Profiles__UserId__47A6A41B">
+        <Association Name="FK__Profiles__UserId__6E01572D">
           <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
           <End Role="Profiles" Type="Self.Profiles" Multiplicity="*" />
           <ReferentialConstraint>
@@ -448,7 +417,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__UserRoles__UserI__6EC0713C">
+        <Association Name="FK__UserRoles__UserI__6B24EA82">
           <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
           <End Role="UserRoles" Type="Self.UserRoles" Multiplicity="*" />
           <ReferentialConstraint>
@@ -460,39 +429,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
-        <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
-          <Parameter Name="owner_id" Type="int" Mode="In" />
-          <Parameter Name="version" Type="int" Mode="In" />
-          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
-        </Function>
-        <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
-          <Parameter Name="owner_id" Type="int" Mode="In" />
-          <Parameter Name="version" Type="int" Mode="In" />
-          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
-        </Function>
-        <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
-          <Parameter Name="owner_id" Type="int" Mode="In" />
-        </Function>
-        <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
-          <Parameter Name="owner_id" Type="int" Mode="In" />
-        </Function>
-        <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
-          <Parameter Name="owner_id" Type="int" Mode="In" />
-        </Function>
-        <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
-          <Parameter Name="owner_id" Type="int" Mode="In" />
-          <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
-        </Function>
-        <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
-        <EntityContainer Name="TESTModelStoreContainer">
-          <EntitySet Name="Account" EntityType="Self.Account" Schema="dbo" store:Type="Tables" />
+        <EntityContainer Name="ClothesModelStoreContainer">
           <EntitySet Name="Cart" EntityType="Self.Cart" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CartDetail" EntityType="Self.CartDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
@@ -508,80 +445,78 @@
           <EntitySet Name="OtpRecords" EntityType="Self.OtpRecords" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Payments" EntityType="Self.Payments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Profiles" EntityType="Self.Profiles" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Size" EntityType="Self.Size" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRoles" EntityType="Self.UserRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK__Cart__UserID__634EBE90" Association="Self.FK__Cart__UserID__634EBE90">
+          <AssociationSet Name="FK__Cart__UserID__73BA3083" Association="Self.FK__Cart__UserID__73BA3083">
             <End Role="Users" EntitySet="Users" />
             <End Role="Cart" EntitySet="Cart" />
           </AssociationSet>
-          <AssociationSet Name="FK__CartDetai__CartI__662B2B3B" Association="Self.FK__CartDetai__CartI__662B2B3B">
+          <AssociationSet Name="FK__CartDetai__CartI__76969D2E" Association="Self.FK__CartDetai__CartI__76969D2E">
             <End Role="Cart" EntitySet="Cart" />
             <End Role="CartDetail" EntitySet="CartDetail" />
           </AssociationSet>
-          <AssociationSet Name="FK__Category___Categ__787EE5A0" Association="Self.FK__Category___Categ__787EE5A0">
+          <AssociationSet Name="FK__Category___Categ__403A8C7D" Association="Self.FK__Category___Categ__403A8C7D">
             <End Role="Category" EntitySet="Category" />
             <End Role="Category_ClothingType" EntitySet="Category_ClothingType" />
           </AssociationSet>
-          <AssociationSet Name="FK__Category___Cloth__797309D9" Association="Self.FK__Category___Cloth__797309D9">
+          <AssociationSet Name="FK__Category___Cloth__412EB0B6" Association="Self.FK__Category___Cloth__412EB0B6">
             <End Role="ClothingType" EntitySet="ClothingType" />
             <End Role="Category_ClothingType" EntitySet="Category_ClothingType" />
           </AssociationSet>
-          <AssociationSet Name="FK__Clothes__Categor__0C85DE4D" Association="Self.FK__Clothes__Categor__0C85DE4D">
+          <AssociationSet Name="FK__Clothes__Categor__4CA06362" Association="Self.FK__Clothes__Categor__4CA06362">
             <End Role="Category" EntitySet="Category" />
             <End Role="Clothes" EntitySet="Clothes" />
           </AssociationSet>
-          <AssociationSet Name="FK__Clothes__Clothin__0D7A0286" Association="Self.FK__Clothes__Clothin__0D7A0286">
+          <AssociationSet Name="FK__Clothes__Clothin__4D94879B" Association="Self.FK__Clothes__Clothin__4D94879B">
             <End Role="ClothingType" EntitySet="ClothingType" />
             <End Role="Clothes" EntitySet="Clothes" />
           </AssociationSet>
-          <AssociationSet Name="FK__Clothes__Clothin__0E6E26BF" Association="Self.FK__Clothes__Clothin__0E6E26BF">
+          <AssociationSet Name="FK__Clothes__Clothin__4E88ABD4" Association="Self.FK__Clothes__Clothin__4E88ABD4">
             <End Role="ClothingStyle" EntitySet="ClothingStyle" />
             <End Role="Clothes" EntitySet="Clothes" />
           </AssociationSet>
-          <AssociationSet Name="FK__Clothes_C__Cloth__123EB7A3" Association="Self.FK__Clothes_C__Cloth__123EB7A3">
+          <AssociationSet Name="FK__Clothes_C__Cloth__59FA5E80" Association="Self.FK__Clothes_C__Cloth__59FA5E80">
             <End Role="Clothes" EntitySet="Clothes" />
             <End Role="Clothes_Color_Size" EntitySet="Clothes_Color_Size" />
           </AssociationSet>
-          <AssociationSet Name="FK__Clothes_C__Color__1332DBDC" Association="Self.FK__Clothes_C__Color__1332DBDC">
+          <AssociationSet Name="FK__Clothes_C__Color__5AEE82B9" Association="Self.FK__Clothes_C__Color__5AEE82B9">
             <End Role="Color" EntitySet="Color" />
             <End Role="Clothes_Color_Size" EntitySet="Clothes_Color_Size" />
           </AssociationSet>
-          <AssociationSet Name="FK__Clothes_C__SizeI__14270015" Association="Self.FK__Clothes_C__SizeI__14270015">
+          <AssociationSet Name="FK__Clothes_C__SizeI__5BE2A6F2" Association="Self.FK__Clothes_C__SizeI__5BE2A6F2">
             <End Role="Size" EntitySet="Size" />
             <End Role="Clothes_Color_Size" EntitySet="Clothes_Color_Size" />
           </AssociationSet>
-          <AssociationSet Name="FK__ClothingS__Cloth__7D439ABD" Association="Self.FK__ClothingS__Cloth__7D439ABD">
+          <AssociationSet Name="FK__ClothingS__Cloth__44FF419A" Association="Self.FK__ClothingS__Cloth__44FF419A">
             <End Role="ClothingType" EntitySet="ClothingType" />
             <End Role="ClothingStyle" EntitySet="ClothingStyle" />
           </AssociationSet>
-          <AssociationSet Name="FK__Image__ClothesID__18EBB532" Association="Self.FK__Image__ClothesID__18EBB532">
+          <AssociationSet Name="FK__Image__ClothesID__60A75C0F" Association="Self.FK__Image__ClothesID__60A75C0F">
             <End Role="Clothes" EntitySet="Clothes" />
             <End Role="Image" EntitySet="Image" />
           </AssociationSet>
-          <AssociationSet Name="FK__Image__ColorID__19DFD96B" Association="Self.FK__Image__ColorID__19DFD96B">
+          <AssociationSet Name="FK__Image__ColorID__619B8048" Association="Self.FK__Image__ColorID__619B8048">
             <End Role="Color" EntitySet="Color" />
             <End Role="Image" EntitySet="Image" />
           </AssociationSet>
-          <AssociationSet Name="FK__OrderDeta__Order__5AB9788F" Association="Self.FK__OrderDeta__Order__5AB9788F">
+          <AssociationSet Name="FK__OrderDeta__Order__7E37BEF6" Association="Self.FK__OrderDeta__Order__7E37BEF6">
             <End Role="Orders" EntitySet="Orders" />
             <End Role="OrderDetails" EntitySet="OrderDetails" />
           </AssociationSet>
-          <AssociationSet Name="FK__Orders__UserID__51300E55" Association="Self.FK__Orders__UserID__51300E55">
+          <AssociationSet Name="FK__Orders__UserID__7B5B524B" Association="Self.FK__Orders__UserID__7B5B524B">
             <End Role="Users" EntitySet="Users" />
             <End Role="Orders" EntitySet="Orders" />
           </AssociationSet>
-          <AssociationSet Name="FK__Payments__OrderI__55F4C372" Association="Self.FK__Payments__OrderI__55F4C372">
+          <AssociationSet Name="FK__Payments__OrderI__02FC7413" Association="Self.FK__Payments__OrderI__02FC7413">
             <End Role="Orders" EntitySet="Orders" />
             <End Role="Payments" EntitySet="Payments" />
           </AssociationSet>
-          <AssociationSet Name="FK__Profiles__UserId__47A6A41B" Association="Self.FK__Profiles__UserId__47A6A41B">
+          <AssociationSet Name="FK__Profiles__UserId__6E01572D" Association="Self.FK__Profiles__UserId__6E01572D">
             <End Role="Users" EntitySet="Users" />
             <End Role="Profiles" EntitySet="Profiles" />
           </AssociationSet>
-          <AssociationSet Name="FK__UserRoles__UserI__6EC0713C" Association="Self.FK__UserRoles__UserI__6EC0713C">
+          <AssociationSet Name="FK__UserRoles__UserI__6B24EA82" Association="Self.FK__UserRoles__UserI__6B24EA82">
             <End Role="Users" EntitySet="Users" />
             <End Role="UserRoles" EntitySet="UserRoles" />
           </AssociationSet>
@@ -590,19 +525,7 @@
     </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="TESTModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="Account">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Password" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="FullName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="DateCreated" Type="DateTime" Precision="3" />
-          <Property Name="IsActive" Type="Boolean" />
-        </EntityType>
+      <Schema Namespace="ClothesModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="Cart">
           <Key>
             <PropertyRef Name="CartID" />
@@ -612,8 +535,8 @@
           <Property Name="CreatedAt" Type="DateTime" Precision="3" />
           <Property Name="IsCompleted" Type="Boolean" />
           <Property Name="TotalAmount" Type="Decimal" Precision="18" Scale="2" />
-          <NavigationProperty Name="User" Relationship="Self.FK__Cart__UserID__634EBE90" FromRole="Cart" ToRole="Users" />
-          <NavigationProperty Name="CartDetails" Relationship="Self.FK__CartDetai__CartI__662B2B3B" FromRole="Cart" ToRole="CartDetail" />
+          <NavigationProperty Name="User" Relationship="Self.FK__Cart__UserID__73BA3083" FromRole="Cart" ToRole="Users" />
+          <NavigationProperty Name="CartDetails" Relationship="Self.FK__CartDetai__CartI__76969D2E" FromRole="Cart" ToRole="CartDetail" />
         </EntityType>
         <EntityType Name="CartDetail">
           <Key>
@@ -628,9 +551,8 @@
           <Property Name="ColorID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Quantity" Type="Int32" Nullable="false" />
           <Property Name="Price" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
-          <Property Name="UserID" Type="Int32" />
           <Property Name="TotalPrice" Type="Decimal" Precision="29" Scale="2" annotation:StoreGeneratedPattern="Computed" />
-          <NavigationProperty Name="Cart" Relationship="Self.FK__CartDetai__CartI__662B2B3B" FromRole="CartDetail" ToRole="Cart" />
+          <NavigationProperty Name="Cart" Relationship="Self.FK__CartDetai__CartI__76969D2E" FromRole="CartDetail" ToRole="Cart" />
         </EntityType>
         <EntityType Name="Category">
           <Key>
@@ -639,8 +561,8 @@
           <Property Name="CategoryID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="CategoryName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="IsHidden" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Category_ClothingType" Relationship="Self.FK__Category___Categ__787EE5A0" FromRole="Category" ToRole="Category_ClothingType" />
-          <NavigationProperty Name="Clothes" Relationship="Self.FK__Clothes__Categor__0C85DE4D" FromRole="Category" ToRole="Clothes" />
+          <NavigationProperty Name="Category_ClothingType" Relationship="Self.FK__Category___Categ__403A8C7D" FromRole="Category" ToRole="Category_ClothingType" />
+          <NavigationProperty Name="Clothes" Relationship="Self.FK__Clothes__Categor__4CA06362" FromRole="Category" ToRole="Clothes" />
         </EntityType>
         <EntityType Name="Category_ClothingType">
           <Key>
@@ -653,8 +575,8 @@
           <Property Name="Img" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="UrlImg" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IsHidden" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Category" Relationship="Self.FK__Category___Categ__787EE5A0" FromRole="Category_ClothingType" ToRole="Category" />
-          <NavigationProperty Name="ClothingType" Relationship="Self.FK__Category___Cloth__797309D9" FromRole="Category_ClothingType" ToRole="ClothingType" />
+          <NavigationProperty Name="Category" Relationship="Self.FK__Category___Categ__403A8C7D" FromRole="Category_ClothingType" ToRole="Category" />
+          <NavigationProperty Name="ClothingType" Relationship="Self.FK__Category___Cloth__412EB0B6" FromRole="Category_ClothingType" ToRole="ClothingType" />
         </EntityType>
         <EntityType Name="Cloth">
           <Key>
@@ -675,12 +597,11 @@
           <Property Name="ClothingTypeID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ClothingStyleID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="IsDeleted" Type="Boolean" />
-          <Property Name="StockQuantity" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Category" Relationship="Self.FK__Clothes__Categor__0C85DE4D" FromRole="Clothes" ToRole="Category" />
-          <NavigationProperty Name="ClothingType" Relationship="Self.FK__Clothes__Clothin__0D7A0286" FromRole="Clothes" ToRole="ClothingType" />
-          <NavigationProperty Name="ClothingStyle" Relationship="Self.FK__Clothes__Clothin__0E6E26BF" FromRole="Clothes" ToRole="ClothingStyle" />
-          <NavigationProperty Name="Clothes_Color_Size" Relationship="Self.FK__Clothes_C__Cloth__123EB7A3" FromRole="Clothes" ToRole="Clothes_Color_Size" />
-          <NavigationProperty Name="Images" Relationship="Self.FK__Image__ClothesID__18EBB532" FromRole="Clothes" ToRole="Image" />
+          <NavigationProperty Name="Category" Relationship="Self.FK__Clothes__Categor__4CA06362" FromRole="Clothes" ToRole="Category" />
+          <NavigationProperty Name="ClothingType" Relationship="Self.FK__Clothes__Clothin__4D94879B" FromRole="Clothes" ToRole="ClothingType" />
+          <NavigationProperty Name="ClothingStyle" Relationship="Self.FK__Clothes__Clothin__4E88ABD4" FromRole="Clothes" ToRole="ClothingStyle" />
+          <NavigationProperty Name="Clothes_Color_Size" Relationship="Self.FK__Clothes_C__Cloth__59FA5E80" FromRole="Clothes" ToRole="Clothes_Color_Size" />
+          <NavigationProperty Name="Images" Relationship="Self.FK__Image__ClothesID__60A75C0F" FromRole="Clothes" ToRole="Image" />
         </EntityType>
         <EntityType Name="Clothes_Color_Size">
           <Key>
@@ -692,9 +613,9 @@
           <Property Name="ColorID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="SizeID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Quantity" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Cloth" Relationship="Self.FK__Clothes_C__Cloth__123EB7A3" FromRole="Clothes_Color_Size" ToRole="Clothes" />
-          <NavigationProperty Name="Color" Relationship="Self.FK__Clothes_C__Color__1332DBDC" FromRole="Clothes_Color_Size" ToRole="Color" />
-          <NavigationProperty Name="Size" Relationship="Self.FK__Clothes_C__SizeI__14270015" FromRole="Clothes_Color_Size" ToRole="Size" />
+          <NavigationProperty Name="Cloth" Relationship="Self.FK__Clothes_C__Cloth__59FA5E80" FromRole="Clothes_Color_Size" ToRole="Clothes" />
+          <NavigationProperty Name="Color" Relationship="Self.FK__Clothes_C__Color__5AEE82B9" FromRole="Clothes_Color_Size" ToRole="Color" />
+          <NavigationProperty Name="Size" Relationship="Self.FK__Clothes_C__SizeI__5BE2A6F2" FromRole="Clothes_Color_Size" ToRole="Size" />
         </EntityType>
         <EntityType Name="ClothingStyle">
           <Key>
@@ -704,8 +625,8 @@
           <Property Name="ClothingStyleName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ClothingTypeID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="IsHidden" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Clothes" Relationship="Self.FK__Clothes__Clothin__0E6E26BF" FromRole="ClothingStyle" ToRole="Clothes" />
-          <NavigationProperty Name="ClothingType" Relationship="Self.FK__ClothingS__Cloth__7D439ABD" FromRole="ClothingStyle" ToRole="ClothingType" />
+          <NavigationProperty Name="Clothes" Relationship="Self.FK__Clothes__Clothin__4E88ABD4" FromRole="ClothingStyle" ToRole="Clothes" />
+          <NavigationProperty Name="ClothingType" Relationship="Self.FK__ClothingS__Cloth__44FF419A" FromRole="ClothingStyle" ToRole="ClothingType" />
         </EntityType>
         <EntityType Name="ClothingType">
           <Key>
@@ -714,9 +635,9 @@
           <Property Name="ClothingTypeID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ClothingTypeName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="IsHidden" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Category_ClothingType" Relationship="Self.FK__Category___Cloth__797309D9" FromRole="ClothingType" ToRole="Category_ClothingType" />
-          <NavigationProperty Name="Clothes" Relationship="Self.FK__Clothes__Clothin__0D7A0286" FromRole="ClothingType" ToRole="Clothes" />
-          <NavigationProperty Name="ClothingStyles" Relationship="Self.FK__ClothingS__Cloth__7D439ABD" FromRole="ClothingType" ToRole="ClothingStyle" />
+          <NavigationProperty Name="Category_ClothingType" Relationship="Self.FK__Category___Cloth__412EB0B6" FromRole="ClothingType" ToRole="Category_ClothingType" />
+          <NavigationProperty Name="Clothes" Relationship="Self.FK__Clothes__Clothin__4D94879B" FromRole="ClothingType" ToRole="Clothes" />
+          <NavigationProperty Name="ClothingStyles" Relationship="Self.FK__ClothingS__Cloth__44FF419A" FromRole="ClothingType" ToRole="ClothingStyle" />
         </EntityType>
         <EntityType Name="Color">
           <Key>
@@ -725,10 +646,10 @@
           <Property Name="ColorID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ColorName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ImageColor" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="UrlImage" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UrlImage" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="IsHidden" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Clothes_Color_Size" Relationship="Self.FK__Clothes_C__Color__1332DBDC" FromRole="Color" ToRole="Clothes_Color_Size" />
-          <NavigationProperty Name="Images" Relationship="Self.FK__Image__ColorID__19DFD96B" FromRole="Color" ToRole="Image" />
+          <NavigationProperty Name="Clothes_Color_Size" Relationship="Self.FK__Clothes_C__Color__5AEE82B9" FromRole="Color" ToRole="Clothes_Color_Size" />
+          <NavigationProperty Name="Images" Relationship="Self.FK__Image__ColorID__619B8048" FromRole="Color" ToRole="Image" />
         </EntityType>
         <EntityType Name="Image">
           <Key>
@@ -748,8 +669,8 @@
           <Property Name="ColorID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ImageOrder" Type="Int32" Nullable="false" />
           <Property Name="IsHidden" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Cloth" Relationship="Self.FK__Image__ClothesID__18EBB532" FromRole="Image" ToRole="Clothes" />
-          <NavigationProperty Name="Color" Relationship="Self.FK__Image__ColorID__19DFD96B" FromRole="Image" ToRole="Color" />
+          <NavigationProperty Name="Cloth" Relationship="Self.FK__Image__ClothesID__60A75C0F" FromRole="Image" ToRole="Clothes" />
+          <NavigationProperty Name="Color" Relationship="Self.FK__Image__ColorID__619B8048" FromRole="Image" ToRole="Color" />
         </EntityType>
         <EntityType Name="OrderDetail">
           <Key>
@@ -765,7 +686,7 @@
           <Property Name="Quantity" Type="Int32" />
           <Property Name="Price" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="TotalPrice" Type="Decimal" Precision="29" Scale="2" annotation:StoreGeneratedPattern="Computed" />
-          <NavigationProperty Name="Order" Relationship="Self.FK__OrderDeta__Order__5AB9788F" FromRole="OrderDetails" ToRole="Orders" />
+          <NavigationProperty Name="Order" Relationship="Self.FK__OrderDeta__Order__7E37BEF6" FromRole="OrderDetails" ToRole="Orders" />
         </EntityType>
         <EntityType Name="Order">
           <Key>
@@ -776,9 +697,9 @@
           <Property Name="CreatedAt" Type="DateTime" Precision="3" />
           <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="TotalAmount" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
-          <NavigationProperty Name="OrderDetails" Relationship="Self.FK__OrderDeta__Order__5AB9788F" FromRole="Orders" ToRole="OrderDetails" />
-          <NavigationProperty Name="User" Relationship="Self.FK__Orders__UserID__51300E55" FromRole="Orders" ToRole="Users" />
-          <NavigationProperty Name="Payments" Relationship="Self.FK__Payments__OrderI__55F4C372" FromRole="Orders" ToRole="Payments" />
+          <NavigationProperty Name="OrderDetails" Relationship="Self.FK__OrderDeta__Order__7E37BEF6" FromRole="Orders" ToRole="OrderDetails" />
+          <NavigationProperty Name="User" Relationship="Self.FK__Orders__UserID__7B5B524B" FromRole="Orders" ToRole="Users" />
+          <NavigationProperty Name="Payments" Relationship="Self.FK__Payments__OrderI__02FC7413" FromRole="Orders" ToRole="Payments" />
         </EntityType>
         <EntityType Name="OtpRecord">
           <Key>
@@ -801,7 +722,7 @@
           <Property Name="Amount" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="TransactionID" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Order" Relationship="Self.FK__Payments__OrderI__55F4C372" FromRole="Payments" ToRole="Orders" />
+          <NavigationProperty Name="Order" Relationship="Self.FK__Payments__OrderI__02FC7413" FromRole="Payments" ToRole="Orders" />
         </EntityType>
         <EntityType Name="Profile">
           <Key>
@@ -814,14 +735,7 @@
           <Property Name="Address" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="DateOfBirth" Type="DateTime" Precision="0" />
           <Property Name="Gender" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="User" Relationship="Self.FK__Profiles__UserId__47A6A41B" FromRole="Profiles" ToRole="Users" />
-        </EntityType>
-        <EntityType Name="Role">
-          <Key>
-            <PropertyRef Name="RoleId" />
-          </Key>
-          <Property Name="RoleId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="RoleName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="Self.FK__Profiles__UserId__6E01572D" FromRole="Profiles" ToRole="Users" />
         </EntityType>
         <EntityType Name="Size">
           <Key>
@@ -830,17 +744,7 @@
           <Property Name="SizeID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="SizeName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="IsHidden" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Clothes_Color_Size" Relationship="Self.FK__Clothes_C__SizeI__14270015" FromRole="Size" ToRole="Clothes_Color_Size" />
-        </EntityType>
-        <EntityType Name="sysdiagram">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="principal_id" Type="Int32" Nullable="false" />
-          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="version" Type="Int32" />
-          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <NavigationProperty Name="Clothes_Color_Size" Relationship="Self.FK__Clothes_C__SizeI__5BE2A6F2" FromRole="Size" ToRole="Clothes_Color_Size" />
         </EntityType>
         <EntityType Name="UserRole">
           <Key>
@@ -849,7 +753,7 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="UserId" Type="Int32" />
           <Property Name="Role" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="User" Relationship="Self.FK__UserRoles__UserI__6EC0713C" FromRole="UserRoles" ToRole="Users" />
+          <NavigationProperty Name="User" Relationship="Self.FK__UserRoles__UserI__6B24EA82" FromRole="UserRoles" ToRole="Users" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -861,12 +765,12 @@
           <Property Name="PasswordHash" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="CreatedAt" Type="DateTime" Precision="3" />
           <Property Name="IsActive" Type="Boolean" />
-          <NavigationProperty Name="Carts" Relationship="Self.FK__Cart__UserID__634EBE90" FromRole="Users" ToRole="Cart" />
-          <NavigationProperty Name="Orders" Relationship="Self.FK__Orders__UserID__51300E55" FromRole="Users" ToRole="Orders" />
-          <NavigationProperty Name="Profiles" Relationship="Self.FK__Profiles__UserId__47A6A41B" FromRole="Users" ToRole="Profiles" />
-          <NavigationProperty Name="UserRoles" Relationship="Self.FK__UserRoles__UserI__6EC0713C" FromRole="Users" ToRole="UserRoles" />
+          <NavigationProperty Name="Carts" Relationship="Self.FK__Cart__UserID__73BA3083" FromRole="Users" ToRole="Cart" />
+          <NavigationProperty Name="Orders" Relationship="Self.FK__Orders__UserID__7B5B524B" FromRole="Users" ToRole="Orders" />
+          <NavigationProperty Name="Profiles" Relationship="Self.FK__Profiles__UserId__6E01572D" FromRole="Users" ToRole="Profiles" />
+          <NavigationProperty Name="UserRoles" Relationship="Self.FK__UserRoles__UserI__6B24EA82" FromRole="Users" ToRole="UserRoles" />
         </EntityType>
-        <Association Name="FK__Cart__UserID__634EBE90">
+        <Association Name="FK__Cart__UserID__73BA3083">
           <End Role="Users" Type="Self.User" Multiplicity="1" />
           <End Role="Cart" Type="Self.Cart" Multiplicity="*" />
           <ReferentialConstraint>
@@ -878,7 +782,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__CartDetai__CartI__662B2B3B">
+        <Association Name="FK__CartDetai__CartI__76969D2E">
           <End Role="Cart" Type="Self.Cart" Multiplicity="1" />
           <End Role="CartDetail" Type="Self.CartDetail" Multiplicity="*" />
           <ReferentialConstraint>
@@ -890,7 +794,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Category___Categ__787EE5A0">
+        <Association Name="FK__Category___Categ__403A8C7D">
           <End Role="Category" Type="Self.Category" Multiplicity="1" />
           <End Role="Category_ClothingType" Type="Self.Category_ClothingType" Multiplicity="*" />
           <ReferentialConstraint>
@@ -902,7 +806,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Clothes__Categor__0C85DE4D">
+        <Association Name="FK__Clothes__Categor__4CA06362">
           <End Role="Category" Type="Self.Category" Multiplicity="1" />
           <End Role="Clothes" Type="Self.Cloth" Multiplicity="*" />
           <ReferentialConstraint>
@@ -914,7 +818,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Category___Cloth__797309D9">
+        <Association Name="FK__Category___Cloth__412EB0B6">
           <End Role="ClothingType" Type="Self.ClothingType" Multiplicity="1" />
           <End Role="Category_ClothingType" Type="Self.Category_ClothingType" Multiplicity="*" />
           <ReferentialConstraint>
@@ -926,7 +830,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Clothes__Clothin__0D7A0286">
+        <Association Name="FK__Clothes__Clothin__4D94879B">
           <End Role="ClothingType" Type="Self.ClothingType" Multiplicity="1" />
           <End Role="Clothes" Type="Self.Cloth" Multiplicity="*" />
           <ReferentialConstraint>
@@ -938,7 +842,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Clothes__Clothin__0E6E26BF">
+        <Association Name="FK__Clothes__Clothin__4E88ABD4">
           <End Role="ClothingStyle" Type="Self.ClothingStyle" Multiplicity="1" />
           <End Role="Clothes" Type="Self.Cloth" Multiplicity="*" />
           <ReferentialConstraint>
@@ -950,7 +854,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Clothes_C__Cloth__123EB7A3">
+        <Association Name="FK__Clothes_C__Cloth__59FA5E80">
           <End Role="Clothes" Type="Self.Cloth" Multiplicity="1" />
           <End Role="Clothes_Color_Size" Type="Self.Clothes_Color_Size" Multiplicity="*" />
           <ReferentialConstraint>
@@ -962,7 +866,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Image__ClothesID__18EBB532">
+        <Association Name="FK__Image__ClothesID__60A75C0F">
           <End Role="Clothes" Type="Self.Cloth" Multiplicity="1" />
           <End Role="Image" Type="Self.Image" Multiplicity="*" />
           <ReferentialConstraint>
@@ -974,7 +878,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Clothes_C__Color__1332DBDC">
+        <Association Name="FK__Clothes_C__Color__5AEE82B9">
           <End Role="Color" Type="Self.Color" Multiplicity="1" />
           <End Role="Clothes_Color_Size" Type="Self.Clothes_Color_Size" Multiplicity="*" />
           <ReferentialConstraint>
@@ -986,7 +890,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Clothes_C__SizeI__14270015">
+        <Association Name="FK__Clothes_C__SizeI__5BE2A6F2">
           <End Role="Size" Type="Self.Size" Multiplicity="1" />
           <End Role="Clothes_Color_Size" Type="Self.Clothes_Color_Size" Multiplicity="*" />
           <ReferentialConstraint>
@@ -998,7 +902,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__ClothingS__Cloth__7D439ABD">
+        <Association Name="FK__ClothingS__Cloth__44FF419A">
           <End Role="ClothingType" Type="Self.ClothingType" Multiplicity="1" />
           <End Role="ClothingStyle" Type="Self.ClothingStyle" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1010,7 +914,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Image__ColorID__19DFD96B">
+        <Association Name="FK__Image__ColorID__619B8048">
           <End Role="Color" Type="Self.Color" Multiplicity="1" />
           <End Role="Image" Type="Self.Image" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1022,7 +926,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__OrderDeta__Order__5AB9788F">
+        <Association Name="FK__OrderDeta__Order__7E37BEF6">
           <End Role="Orders" Type="Self.Order" Multiplicity="0..1" />
           <End Role="OrderDetails" Type="Self.OrderDetail" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1034,7 +938,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Orders__UserID__51300E55">
+        <Association Name="FK__Orders__UserID__7B5B524B">
           <End Role="Users" Type="Self.User" Multiplicity="1" />
           <End Role="Orders" Type="Self.Order" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1046,7 +950,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Payments__OrderI__55F4C372">
+        <Association Name="FK__Payments__OrderI__02FC7413">
           <End Role="Orders" Type="Self.Order" Multiplicity="1" />
           <End Role="Payments" Type="Self.Payment" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1058,7 +962,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Profiles__UserId__47A6A41B">
+        <Association Name="FK__Profiles__UserId__6E01572D">
           <End Role="Users" Type="Self.User" Multiplicity="0..1" />
           <End Role="Profiles" Type="Self.Profile" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1070,7 +974,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__UserRoles__UserI__6EC0713C">
+        <Association Name="FK__UserRoles__UserI__6B24EA82">
           <End Role="Users" Type="Self.User" Multiplicity="0..1" />
           <End Role="UserRoles" Type="Self.UserRole" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1083,7 +987,6 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="TESTEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Accounts" EntityType="Self.Account" />
           <EntitySet Name="Carts" EntityType="Self.Cart" />
           <EntitySet Name="CartDetails" EntityType="Self.CartDetail" />
           <EntitySet Name="Categories" EntityType="Self.Category" />
@@ -1099,146 +1002,90 @@
           <EntitySet Name="OtpRecords" EntityType="Self.OtpRecord" />
           <EntitySet Name="Payments" EntityType="Self.Payment" />
           <EntitySet Name="Profiles" EntityType="Self.Profile" />
-          <EntitySet Name="Roles" EntityType="Self.Role" />
           <EntitySet Name="Sizes" EntityType="Self.Size" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
           <EntitySet Name="UserRoles" EntityType="Self.UserRole" />
           <EntitySet Name="Users" EntityType="Self.User" />
-          <AssociationSet Name="FK__Cart__UserID__634EBE90" Association="Self.FK__Cart__UserID__634EBE90">
+          <AssociationSet Name="FK__Cart__UserID__73BA3083" Association="Self.FK__Cart__UserID__73BA3083">
             <End Role="Users" EntitySet="Users" />
             <End Role="Cart" EntitySet="Carts" />
           </AssociationSet>
-          <AssociationSet Name="FK__CartDetai__CartI__662B2B3B" Association="Self.FK__CartDetai__CartI__662B2B3B">
+          <AssociationSet Name="FK__CartDetai__CartI__76969D2E" Association="Self.FK__CartDetai__CartI__76969D2E">
             <End Role="Cart" EntitySet="Carts" />
             <End Role="CartDetail" EntitySet="CartDetails" />
           </AssociationSet>
-          <AssociationSet Name="FK__Category___Categ__787EE5A0" Association="Self.FK__Category___Categ__787EE5A0">
+          <AssociationSet Name="FK__Category___Categ__403A8C7D" Association="Self.FK__Category___Categ__403A8C7D">
             <End Role="Category" EntitySet="Categories" />
             <End Role="Category_ClothingType" EntitySet="Category_ClothingType" />
           </AssociationSet>
-          <AssociationSet Name="FK__Clothes__Categor__0C85DE4D" Association="Self.FK__Clothes__Categor__0C85DE4D">
+          <AssociationSet Name="FK__Clothes__Categor__4CA06362" Association="Self.FK__Clothes__Categor__4CA06362">
             <End Role="Category" EntitySet="Categories" />
             <End Role="Clothes" EntitySet="Clothes" />
           </AssociationSet>
-          <AssociationSet Name="FK__Category___Cloth__797309D9" Association="Self.FK__Category___Cloth__797309D9">
+          <AssociationSet Name="FK__Category___Cloth__412EB0B6" Association="Self.FK__Category___Cloth__412EB0B6">
             <End Role="ClothingType" EntitySet="ClothingTypes" />
             <End Role="Category_ClothingType" EntitySet="Category_ClothingType" />
           </AssociationSet>
-          <AssociationSet Name="FK__Clothes__Clothin__0D7A0286" Association="Self.FK__Clothes__Clothin__0D7A0286">
+          <AssociationSet Name="FK__Clothes__Clothin__4D94879B" Association="Self.FK__Clothes__Clothin__4D94879B">
             <End Role="ClothingType" EntitySet="ClothingTypes" />
             <End Role="Clothes" EntitySet="Clothes" />
           </AssociationSet>
-          <AssociationSet Name="FK__Clothes__Clothin__0E6E26BF" Association="Self.FK__Clothes__Clothin__0E6E26BF">
+          <AssociationSet Name="FK__Clothes__Clothin__4E88ABD4" Association="Self.FK__Clothes__Clothin__4E88ABD4">
             <End Role="ClothingStyle" EntitySet="ClothingStyles" />
             <End Role="Clothes" EntitySet="Clothes" />
           </AssociationSet>
-          <AssociationSet Name="FK__Clothes_C__Cloth__123EB7A3" Association="Self.FK__Clothes_C__Cloth__123EB7A3">
+          <AssociationSet Name="FK__Clothes_C__Cloth__59FA5E80" Association="Self.FK__Clothes_C__Cloth__59FA5E80">
             <End Role="Clothes" EntitySet="Clothes" />
             <End Role="Clothes_Color_Size" EntitySet="Clothes_Color_Size" />
           </AssociationSet>
-          <AssociationSet Name="FK__Image__ClothesID__18EBB532" Association="Self.FK__Image__ClothesID__18EBB532">
+          <AssociationSet Name="FK__Image__ClothesID__60A75C0F" Association="Self.FK__Image__ClothesID__60A75C0F">
             <End Role="Clothes" EntitySet="Clothes" />
             <End Role="Image" EntitySet="Images" />
           </AssociationSet>
-          <AssociationSet Name="FK__Clothes_C__Color__1332DBDC" Association="Self.FK__Clothes_C__Color__1332DBDC">
+          <AssociationSet Name="FK__Clothes_C__Color__5AEE82B9" Association="Self.FK__Clothes_C__Color__5AEE82B9">
             <End Role="Color" EntitySet="Colors" />
             <End Role="Clothes_Color_Size" EntitySet="Clothes_Color_Size" />
           </AssociationSet>
-          <AssociationSet Name="FK__Clothes_C__SizeI__14270015" Association="Self.FK__Clothes_C__SizeI__14270015">
+          <AssociationSet Name="FK__Clothes_C__SizeI__5BE2A6F2" Association="Self.FK__Clothes_C__SizeI__5BE2A6F2">
             <End Role="Size" EntitySet="Sizes" />
             <End Role="Clothes_Color_Size" EntitySet="Clothes_Color_Size" />
           </AssociationSet>
-          <AssociationSet Name="FK__ClothingS__Cloth__7D439ABD" Association="Self.FK__ClothingS__Cloth__7D439ABD">
+          <AssociationSet Name="FK__ClothingS__Cloth__44FF419A" Association="Self.FK__ClothingS__Cloth__44FF419A">
             <End Role="ClothingType" EntitySet="ClothingTypes" />
             <End Role="ClothingStyle" EntitySet="ClothingStyles" />
           </AssociationSet>
-          <AssociationSet Name="FK__Image__ColorID__19DFD96B" Association="Self.FK__Image__ColorID__19DFD96B">
+          <AssociationSet Name="FK__Image__ColorID__619B8048" Association="Self.FK__Image__ColorID__619B8048">
             <End Role="Color" EntitySet="Colors" />
             <End Role="Image" EntitySet="Images" />
           </AssociationSet>
-          <AssociationSet Name="FK__OrderDeta__Order__5AB9788F" Association="Self.FK__OrderDeta__Order__5AB9788F">
+          <AssociationSet Name="FK__OrderDeta__Order__7E37BEF6" Association="Self.FK__OrderDeta__Order__7E37BEF6">
             <End Role="Orders" EntitySet="Orders" />
             <End Role="OrderDetails" EntitySet="OrderDetails" />
           </AssociationSet>
-          <AssociationSet Name="FK__Orders__UserID__51300E55" Association="Self.FK__Orders__UserID__51300E55">
+          <AssociationSet Name="FK__Orders__UserID__7B5B524B" Association="Self.FK__Orders__UserID__7B5B524B">
             <End Role="Users" EntitySet="Users" />
             <End Role="Orders" EntitySet="Orders" />
           </AssociationSet>
-          <AssociationSet Name="FK__Payments__OrderI__55F4C372" Association="Self.FK__Payments__OrderI__55F4C372">
+          <AssociationSet Name="FK__Payments__OrderI__02FC7413" Association="Self.FK__Payments__OrderI__02FC7413">
             <End Role="Orders" EntitySet="Orders" />
             <End Role="Payments" EntitySet="Payments" />
           </AssociationSet>
-          <AssociationSet Name="FK__Profiles__UserId__47A6A41B" Association="Self.FK__Profiles__UserId__47A6A41B">
+          <AssociationSet Name="FK__Profiles__UserId__6E01572D" Association="Self.FK__Profiles__UserId__6E01572D">
             <End Role="Users" EntitySet="Users" />
             <End Role="Profiles" EntitySet="Profiles" />
           </AssociationSet>
-          <AssociationSet Name="FK__UserRoles__UserI__6EC0713C" Association="Self.FK__UserRoles__UserI__6EC0713C">
+          <AssociationSet Name="FK__UserRoles__UserI__6B24EA82" Association="Self.FK__UserRoles__UserI__6B24EA82">
             <End Role="Users" EntitySet="Users" />
             <End Role="UserRoles" EntitySet="UserRoles" />
           </AssociationSet>
-          <FunctionImport Name="sp_alterdiagram">
-            <Parameter Name="diagramname" Mode="In" Type="String" />
-            <Parameter Name="owner_id" Mode="In" Type="Int32" />
-            <Parameter Name="version" Mode="In" Type="Int32" />
-            <Parameter Name="definition" Mode="In" Type="Binary" />
-          </FunctionImport>
-          <FunctionImport Name="sp_creatediagram">
-            <Parameter Name="diagramname" Mode="In" Type="String" />
-            <Parameter Name="owner_id" Mode="In" Type="Int32" />
-            <Parameter Name="version" Mode="In" Type="Int32" />
-            <Parameter Name="definition" Mode="In" Type="Binary" />
-          </FunctionImport>
-          <FunctionImport Name="sp_dropdiagram">
-            <Parameter Name="diagramname" Mode="In" Type="String" />
-            <Parameter Name="owner_id" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(TESTModel.sp_helpdiagramdefinition_Result)">
-            <Parameter Name="diagramname" Mode="In" Type="String" />
-            <Parameter Name="owner_id" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(TESTModel.sp_helpdiagrams_Result)">
-            <Parameter Name="diagramname" Mode="In" Type="String" />
-            <Parameter Name="owner_id" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="sp_renamediagram">
-            <Parameter Name="diagramname" Mode="In" Type="String" />
-            <Parameter Name="owner_id" Mode="In" Type="Int32" />
-            <Parameter Name="new_diagramname" Mode="In" Type="String" />
-          </FunctionImport>
-          <FunctionImport Name="sp_upgraddiagrams" />
         </EntityContainer>
-        <ComplexType Name="sp_helpdiagramdefinition_Result">
-          <Property Type="Int32" Name="version" Nullable="true" />
-          <Property Type="Binary" Name="definition" Nullable="true" />
-        </ComplexType>
-        <ComplexType Name="sp_helpdiagrams_Result">
-          <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
-          <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
-          <Property Type="Int32" Name="ID" Nullable="false" />
-          <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
-          <Property Type="Int32" Name="OwnerID" Nullable="false" />
-        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="TESTModelStoreContainer" CdmEntityContainer="TESTEntities">
-          <EntitySetMapping Name="Accounts">
-            <EntityTypeMapping TypeName="TESTModel.Account">
-              <MappingFragment StoreEntitySet="Account">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Username" ColumnName="Username" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="FullName" ColumnName="FullName" />
-                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
+        <EntityContainerMapping StorageEntityContainer="ClothesModelStoreContainer" CdmEntityContainer="TESTEntities">
           <EntitySetMapping Name="Carts">
-            <EntityTypeMapping TypeName="TESTModel.Cart">
+            <EntityTypeMapping TypeName="ClothesModel.Cart">
               <MappingFragment StoreEntitySet="Cart">
                 <ScalarProperty Name="CartID" ColumnName="CartID" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
@@ -1249,7 +1096,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CartDetails">
-            <EntityTypeMapping TypeName="TESTModel.CartDetail">
+            <EntityTypeMapping TypeName="ClothesModel.CartDetail">
               <MappingFragment StoreEntitySet="CartDetail">
                 <ScalarProperty Name="CartDetailID" ColumnName="CartDetailID" />
                 <ScalarProperty Name="CartID" ColumnName="CartID" />
@@ -1260,13 +1107,12 @@
                 <ScalarProperty Name="ColorID" ColumnName="ColorID" />
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />
                 <ScalarProperty Name="Price" ColumnName="Price" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="TotalPrice" ColumnName="TotalPrice" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Categories">
-            <EntityTypeMapping TypeName="TESTModel.Category">
+            <EntityTypeMapping TypeName="ClothesModel.Category">
               <MappingFragment StoreEntitySet="Category">
                 <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
                 <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
@@ -1275,7 +1121,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Category_ClothingType">
-            <EntityTypeMapping TypeName="TESTModel.Category_ClothingType">
+            <EntityTypeMapping TypeName="ClothesModel.Category_ClothingType">
               <MappingFragment StoreEntitySet="Category_ClothingType">
                 <ScalarProperty Name="CateCloTypeName" ColumnName="CateCloTypeName" />
                 <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
@@ -1287,7 +1133,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Clothes">
-            <EntityTypeMapping TypeName="TESTModel.Cloth">
+            <EntityTypeMapping TypeName="ClothesModel.Cloth">
               <MappingFragment StoreEntitySet="Clothes">
                 <ScalarProperty Name="ClothesID" ColumnName="ClothesID" />
                 <ScalarProperty Name="ClothesName" ColumnName="ClothesName" />
@@ -1304,12 +1150,11 @@
                 <ScalarProperty Name="ClothingTypeID" ColumnName="ClothingTypeID" />
                 <ScalarProperty Name="ClothingStyleID" ColumnName="ClothingStyleID" />
                 <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="StockQuantity" ColumnName="StockQuantity" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Clothes_Color_Size">
-            <EntityTypeMapping TypeName="TESTModel.Clothes_Color_Size">
+            <EntityTypeMapping TypeName="ClothesModel.Clothes_Color_Size">
               <MappingFragment StoreEntitySet="Clothes_Color_Size">
                 <ScalarProperty Name="ClothesID" ColumnName="ClothesID" />
                 <ScalarProperty Name="ColorID" ColumnName="ColorID" />
@@ -1319,7 +1164,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="ClothingStyles">
-            <EntityTypeMapping TypeName="TESTModel.ClothingStyle">
+            <EntityTypeMapping TypeName="ClothesModel.ClothingStyle">
               <MappingFragment StoreEntitySet="ClothingStyle">
                 <ScalarProperty Name="ClothingStyleID" ColumnName="ClothingStyleID" />
                 <ScalarProperty Name="ClothingStyleName" ColumnName="ClothingStyleName" />
@@ -1329,7 +1174,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="ClothingTypes">
-            <EntityTypeMapping TypeName="TESTModel.ClothingType">
+            <EntityTypeMapping TypeName="ClothesModel.ClothingType">
               <MappingFragment StoreEntitySet="ClothingType">
                 <ScalarProperty Name="ClothingTypeID" ColumnName="ClothingTypeID" />
                 <ScalarProperty Name="ClothingTypeName" ColumnName="ClothingTypeName" />
@@ -1338,7 +1183,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Colors">
-            <EntityTypeMapping TypeName="TESTModel.Color">
+            <EntityTypeMapping TypeName="ClothesModel.Color">
               <MappingFragment StoreEntitySet="Color">
                 <ScalarProperty Name="ColorID" ColumnName="ColorID" />
                 <ScalarProperty Name="ColorName" ColumnName="ColorName" />
@@ -1349,7 +1194,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Images">
-            <EntityTypeMapping TypeName="TESTModel.Image">
+            <EntityTypeMapping TypeName="ClothesModel.Image">
               <MappingFragment StoreEntitySet="Image">
                 <ScalarProperty Name="ImageID" ColumnName="ImageID" />
                 <ScalarProperty Name="ImageName" ColumnName="ImageName" />
@@ -1369,7 +1214,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="OrderDetails">
-            <EntityTypeMapping TypeName="TESTModel.OrderDetail">
+            <EntityTypeMapping TypeName="ClothesModel.OrderDetail">
               <MappingFragment StoreEntitySet="OrderDetails">
                 <ScalarProperty Name="OrderDetailID" ColumnName="OrderDetailID" />
                 <ScalarProperty Name="OrderID" ColumnName="OrderID" />
@@ -1385,7 +1230,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Orders">
-            <EntityTypeMapping TypeName="TESTModel.Order">
+            <EntityTypeMapping TypeName="ClothesModel.Order">
               <MappingFragment StoreEntitySet="Orders">
                 <ScalarProperty Name="OrderID" ColumnName="OrderID" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
@@ -1396,7 +1241,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="OtpRecords">
-            <EntityTypeMapping TypeName="TESTModel.OtpRecord">
+            <EntityTypeMapping TypeName="ClothesModel.OtpRecord">
               <MappingFragment StoreEntitySet="OtpRecords">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
@@ -1407,7 +1252,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Payments">
-            <EntityTypeMapping TypeName="TESTModel.Payment">
+            <EntityTypeMapping TypeName="ClothesModel.Payment">
               <MappingFragment StoreEntitySet="Payments">
                 <ScalarProperty Name="PaymentID" ColumnName="PaymentID" />
                 <ScalarProperty Name="OrderID" ColumnName="OrderID" />
@@ -1420,7 +1265,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Profiles">
-            <EntityTypeMapping TypeName="TESTModel.Profile">
+            <EntityTypeMapping TypeName="ClothesModel.Profile">
               <MappingFragment StoreEntitySet="Profiles">
                 <ScalarProperty Name="ProfileId" ColumnName="ProfileId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
@@ -1432,16 +1277,8 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Roles">
-            <EntityTypeMapping TypeName="TESTModel.Role">
-              <MappingFragment StoreEntitySet="Roles">
-                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
-                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Sizes">
-            <EntityTypeMapping TypeName="TESTModel.Size">
+            <EntityTypeMapping TypeName="ClothesModel.Size">
               <MappingFragment StoreEntitySet="Size">
                 <ScalarProperty Name="SizeID" ColumnName="SizeID" />
                 <ScalarProperty Name="SizeName" ColumnName="SizeName" />
@@ -1449,19 +1286,8 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="sysdiagrams">
-            <EntityTypeMapping TypeName="TESTModel.sysdiagram">
-              <MappingFragment StoreEntitySet="sysdiagrams">
-                <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
-                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
-                <ScalarProperty Name="version" ColumnName="version" />
-                <ScalarProperty Name="definition" ColumnName="definition" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="UserRoles">
-            <EntityTypeMapping TypeName="TESTModel.UserRole">
+            <EntityTypeMapping TypeName="ClothesModel.UserRole">
               <MappingFragment StoreEntitySet="UserRoles">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
@@ -1470,7 +1296,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Users">
-            <EntityTypeMapping TypeName="TESTModel.User">
+            <EntityTypeMapping TypeName="ClothesModel.User">
               <MappingFragment StoreEntitySet="Users">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Username" ColumnName="Username" />
@@ -1481,30 +1307,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="TESTModel.Store.sp_alterdiagram" />
-          <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="TESTModel.Store.sp_creatediagram" />
-          <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="TESTModel.Store.sp_dropdiagram" />
-          <FunctionImportMapping FunctionImportName="sp_helpdiagramdefinition" FunctionName="TESTModel.Store.sp_helpdiagramdefinition">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="TESTModel.sp_helpdiagramdefinition_Result">
-                <ScalarProperty Name="version" ColumnName="version" />
-                <ScalarProperty Name="definition" ColumnName="definition" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="sp_helpdiagrams" FunctionName="TESTModel.Store.sp_helpdiagrams">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="TESTModel.sp_helpdiagrams_Result">
-                <ScalarProperty Name="Database" ColumnName="Database" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Owner" ColumnName="Owner" />
-                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="TESTModel.Store.sp_renamediagram" />
-          <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="TESTModel.Store.sp_upgraddiagrams" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

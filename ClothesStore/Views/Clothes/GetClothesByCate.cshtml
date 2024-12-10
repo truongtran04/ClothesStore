@@ -549,17 +549,17 @@
 <script>
     $(document).ready(function () {
         //Sự kiện slick carousel - category
-        //$('.category-list').slick({
-        //    infinite: true,          // Cuộn vô hạn
-        //    slidesToShow: 8,         // Số mục hiển thị trên mỗi slide
-        //    slidesToScroll: 3,       // Số mục cuộn mỗi lần
-        //    prevArrow: '<i class="bi bi-arrow-left-short" style="font-size:30px; cursor:pointer;align-content:center; z-index:1" id="prevcl"></i>',
-        //    nextArrow: '<i class="bi bi-arrow-right-short" style="font-size:30px; cursor:pointer;align-content:center;right:0" id="nextcl"></i>',
-        //    autoplay: true,          // Tự động phát
-        //    autoplaySpeed: 2000,     // Thời gian giữa các slide (ms)
-        //    dots: true,              // Hiển thị dấu chấm điều hướng
-        //    arrows: true,            // Hiển thị mũi tên điều hướng
-        //});
+        $('.category-list').slick({
+            infinite: true,          // Cuộn vô hạn
+            slidesToShow: 8,         // Số mục hiển thị trên mỗi slide
+            slidesToScroll: 3,       // Số mục cuộn mỗi lần
+            prevArrow: '<i class="bi bi-arrow-left-short" style="font-size:30px; cursor:pointer;align-content:center; z-index:1" id="prevcl"></i>',
+            nextArrow: '<i class="bi bi-arrow-right-short" style="font-size:30px; cursor:pointer;align-content:center;right:0" id="nextcl"></i>',
+            autoplay: true,          // Tự động phát
+            autoplaySpeed: 2000,     // Thời gian giữa các slide (ms)
+            dots: true,              // Hiển thị dấu chấm điều hướng
+            arrows: true,            // Hiển thị mũi tên điều hướng
+        });
         //Sự kiện slick carousel - product
         $('.product-list').each(function () {
             $(this).slick({

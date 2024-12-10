@@ -4252,9 +4252,6 @@
     <Compile Include="Library\NotiMessage.cs" />
     <Compile Include="Library\SelectItem.cs" />
     <Compile Include="Library\XString.cs" />
-    <Compile Include="Models\Account.cs">
-      <DependentUpon>Shopping.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\Cart.cs">
       <DependentUpon>Shopping.tt</DependentUpon>
     </Compile>
@@ -4301,9 +4298,6 @@
     <Compile Include="Models\Profile.cs">
       <DependentUpon>Shopping.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Role.cs">
-      <DependentUpon>Shopping.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\Shopping.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -4320,15 +4314,6 @@
       <DependentUpon>Shopping.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\Size.cs">
-      <DependentUpon>Shopping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\sp_helpdiagramdefinition_Result.cs">
-      <DependentUpon>Shopping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\sp_helpdiagrams_Result.cs">
-      <DependentUpon>Shopping.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\sysdiagram.cs">
       <DependentUpon>Shopping.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\User.cs">

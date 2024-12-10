@@ -23,7 +23,6 @@ namespace ClothesStore.Models
         public string ColorID { get; set; }
         public int Quantity { get; set; }
         public decimal Price { get; set; }
-        public Nullable<int> UserID { get; set; }
         public Nullable<decimal> TotalPrice { get; set; }
     
         public virtual Cart Cart { get; set; }
