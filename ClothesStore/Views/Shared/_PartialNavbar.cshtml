@@ -2,7 +2,28 @@
     var userId = Session["UserId"] != null ? Session["UserId"].ToString() : string.Empty;
 }
 @using ClothesStore.Models
+<style>
+    .custom-alert {
+        background-color: #f8d7da; /* Màu nền */
+        color: #721c24; /* Màu chữ */
+        padding: 10px 20px; /* Khoảng cách */
+        border-radius: 5px; /* Bo góc */
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+        margin-bottom: 10px; /* Khoảng cách giữa các alert */
+        font-size: 14px;
+        z-index: 1
+    }
 
+        .custom-alert.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .custom-alert.error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+</style>
 <nav class="navbar navbar-expand-lg border-bottom">
     <div class="container p-0">
         <div class="navbar-brand ms-3">
@@ -66,7 +87,7 @@
     </div>
 </nav>
 @*Offcanvas giỏ hàng*@
-<div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel">
+<div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel" style="width:500px">
     <div class="offcanvas-header">
         <h5 id="cartOffcanvasLabel">Giỏ hàng của bạn</h5>
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -124,11 +145,72 @@
         {
             <p>Chưa có sản phẩm nào trong giỏ hàng.</p>
         }
-
+        @if (Session["CartDetails"] != null)
+        {
+            var cartDetails = (List<CartDetail>)Session["CartDetails"];
+            if (cartDetails.Count > 0)
+            {
+                <ul class="list-group" style="height:85%; overflow:auto">
+                    @foreach (var item in cartDetails)
+                    {
+                        var uniqueId = $"{item.ClothesID}_{item.ColorID}_{item.SizeName}";
+                        <li id="row_@uniqueId" class="list-group-item d-flex justify-content-between align-items-center">
+                            <div class="row">
+                                <div class="col-3">
+                                    <a href="@Url.Action("Index", "ClothesDetail", new { id = item.ClothesID })">
+                                        <img src="@item.MainImage" alt="@item.ClothesName" style="width: 100%; height: 100px;" class="me-2" />
+                                    </a>
+                                </div>
+                                <div class="col-5 position-relative">
+                                    <a href="@Url.Action("Index", "ClothesDetail", new { id = item.ClothesID })" style="text-decoration:none; color:black">
+                                        <div>@item.ClothesName</div>
+                                    </a>
+                                    <div>
+                                        <img src="@item.MainImage" alt="@item.ColorID" style="width: 20px; height: 20px; border-radius: 50%;">
+                                        <span>@item.ColorID</span> |
+                                        <span>@item.SizeName</span>
+                                    </div>
+                                    <span class="price position-absolute bottom-0">@item.Price.ToString("N0") ₫</span><br />
+                                </div>
+                                <div class="col-4 d-flex flex-column justify-content-between align-items-end">
+                                    <form action="@Url.Action("RemoveFromCart", "Cart")" method="post" style="display:inline;">
+                                        <input type="hidden" name="uniqueId" value="@uniqueId" />
+                                        <input type="hidden" name="userId" value="@userId" />
+                                        <button class="btn btn-danger btn-sm remove-item" data-unique-id="@uniqueId">
+                                            Xóa
+                                        </button>
+                                    </form>
+                                    <div class="d-flex align-items-center">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="updateQuantity('@uniqueId', -1, @item.Price)" style="width: 30px; height: 30px; border-radius: 5px 0 0 5px; border-color: #EDF1F5 ">-</button>
+                                        <input type="number" id="quantity_@uniqueId" value="@item.Quantity" class="form-control" style="border-radius: 0; border-color: #EDF1F5; font-size:10px" readonly />
+                                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="updateQuantity('@uniqueId', 1, @item.Price)" style="width: 30px; height: 30px; border-radius: 0 5px 5px 0; border-color: #EDF1F5 ">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+                <div class="mt-3 position-relative" style="height:13%">
+                    <div class="d-flex justify-content-between">
+                        <span>Số lượng: <span id="totalQuantity"></span></span>
+                        <span>Tống tiền: <span id="totalCartPrice"></span></span>
+                    </div>
+                    <a href="@Url.Action("Index", "Orders")" class="btn btn-success mt-3 w-100 position-absolute bottom-0" style="padding:10px">Thanh toán</a>
+                </div>
+            }
+            else
+            {
+                <p>Chưa có sản phẩm nào trong giỏ hàng.</p>
+            }
+        }
+        else
+        {
+            <p>Chưa có sản phẩm nào trong giỏ hàng.</p>
+        }
     </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<div id="alert-container" style="position: fixed; top: 80px; left: 20px; z-index: 1050; display: none;">
+</div>
 <script>
     var totalCartPrice = parseInt("@ViewBag.TotalAmount".replace(/\./g, ''));
 
@@ -226,42 +308,115 @@
 
         $("#totalCartPrice").text(formattedTotal);
     }
+    function showAlert(message, type = 'error') {
+        const alertContainer = $('#alert-container');
+        const alertId = `alert_${Date.now()}`;
+        const alertElement = $(`
+    <div id="${alertId}" class="custom-alert ${type}">
+        ${message}
+    </div>
+`);
+
+        alertContainer.append(alertElement);
+        alertContainer.show();
+
+        // Tự động ẩn sau 3 giây
+        setTimeout(() => {
+            $(`#${alertId}`).fadeOut(500, function () {
+                $(this).remove();
+                if (alertContainer.children().length === 0) {
+                    alertContainer.hide();
+                }
+            });
+        }, 3000);
+    }
+    $(document).on('submit', 'form', function (e) {
+        e.preventDefault(); // Ngăn trình duyệt gửi form theo cách mặc định
+
+        const form = $(this);
+        const formData = form.serialize(); // Lấy tất cả dữ liệu từ form
+
+        $.ajax({
+            url: form.attr('action'), // Lấy URL từ thuộc tính action của form
+            type: 'POST',
+            data: formData,
+            success: function (response) {
+                if (response.success) {
+                    showAlert(response.message, 'success'); // Hiển thị thông báo thành công
+                    updateCartTotal(); // Cập nhật tổng giá trị
+                    updateTotalCartPrice();
+                    totalCartQuantity()
+                } else {
+                    showAlert(response.message, 'error'); // Hiển thị thông báo lỗi
+                }
+            },
+            error: function () {
+                showAlert('Đã xảy ra lỗi. Vui lòng thử lại.', 'error');
+            }
+        });
+    });
+    $(document).on('click', '.remove-item', function (e) {
+        e.preventDefault();
+        var uniqueId = $(this).data('unique-id');
+
+        if (confirm('Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng?')) {
+        $.ajax({
+            url: form.attr('action'),
+            type: 'POST',
+            data: { uniqueId: uniqueId },
+            success: function (response) {
+                if (response.success) {
+                    showAlert(response.message, 'success'); // Alert thành công
+                    $(`#row_${uniqueId}`).remove(); // Xóa dòng sản phẩm
+                    updateCartTotal(); // Cập nhật tổng giá trị
+                    updateTotalCartPrice();
+                    totalCartQuantity()
+                } else {
+                    showAlert(response.message, 'error'); // Alert lỗi
+                }
+            },
+            error: function () {
+                showAlert('Đã xảy ra lỗi. Vui lòng thử lại.', 'error');
+            }
+        });
+        }
+    });
 </script>
 
 @*<script>
-    const targetLinks = document.querySelectorAll('.hover-item'); // Lấy các mục Nữ, Nam, Bé gái, Bé trai
-    const outsideDiv = document.querySelector('.sub-menu'); // Thẻ div có class sub-menu
+        const targetLinks = document.querySelectorAll('.hover-item'); // Lấy các mục Nữ, Nam, Bé gái, Bé trai
+        const outsideDiv = document.querySelector('.sub-menu'); // Thẻ div có class sub-menu
 
-    function isAnyHovering() {
-        // Kiểm tra nếu có bất kỳ mục nào đang được hover
-        return Array.from(targetLinks).some(link => link.matches(':hover'));
-    }
+        function isAnyHovering() {
+            // Kiểm tra nếu có bất kỳ mục nào đang được hover
+            return Array.from(targetLinks).some(link => link.matches(':hover'));
+        }
 
-    targetLinks.forEach(targetLink => {
-        targetLink.addEventListener('mouseenter', function () {
-            outsideDiv.classList.add('show'); // Thêm class để hiển thị sub-menu khi hover
+        targetLinks.forEach(targetLink => {
+            targetLink.addEventListener('mouseenter', function () {
+                outsideDiv.classList.add('show'); // Thêm class để hiển thị sub-menu khi hover
+            });
+
+            targetLink.addEventListener('mouseleave', function () {
+                setTimeout(() => {
+                    // Nếu không hover vào sub-menu và không hover vào bất kỳ link nào
+                    if (!outsideDiv.matches(':hover') && !isAnyHovering()) {
+                        outsideDiv.classList.remove('show'); // Xóa class show nếu không còn hover vào mục nào
+                    }
+                }, 100);
+            });
         });
 
-        targetLink.addEventListener('mouseleave', function () {
+        outsideDiv.addEventListener('mouseenter', function () {
+            outsideDiv.classList.add('show'); // Giữ sub-menu mở khi hover vào
+        });
+
+        outsideDiv.addEventListener('mouseleave', function () {
             setTimeout(() => {
                 // Nếu không hover vào sub-menu và không hover vào bất kỳ link nào
                 if (!outsideDiv.matches(':hover') && !isAnyHovering()) {
-                    outsideDiv.classList.remove('show'); // Xóa class show nếu không còn hover vào mục nào
+                    outsideDiv.classList.remove('show'); // Đóng sub-menu khi chuột rời đi
                 }
             }, 100);
         });
-    });
-
-    outsideDiv.addEventListener('mouseenter', function () {
-        outsideDiv.classList.add('show'); // Giữ sub-menu mở khi hover vào
-    });
-
-    outsideDiv.addEventListener('mouseleave', function () {
-        setTimeout(() => {
-            // Nếu không hover vào sub-menu và không hover vào bất kỳ link nào
-            if (!outsideDiv.matches(':hover') && !isAnyHovering()) {
-                outsideDiv.classList.remove('show'); // Đóng sub-menu khi chuột rời đi
-            }
-        }, 100);
-    });
-</script>*@
+    </script>*@

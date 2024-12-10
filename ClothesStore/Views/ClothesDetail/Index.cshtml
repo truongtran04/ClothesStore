@@ -138,7 +138,7 @@
 
                 <!-- Hiển thị màu sắc -->
                 <div class="d-flex mt-4">
-                    <p class="me-2"><strong>Màu sắc: </strong></p>
+                    <p class="me-2"><strong>Màu sắc:  @Model.Clothes_Color_Size.FirstOrDefault().ColorID</strong></p>
                     @foreach (var image in ViewBag.Images)
                     {
                         if (image.ClothesID == Model.ClothesID)
@@ -183,7 +183,17 @@
                     </div>
 
                 </div>
+                <form action="@Url.Action("AddToCart", "Cart")" method="post" onsubmit="return validateForm()" style="margin-top:30px">
+                    <input type="hidden" name="clothesId" value="@Model.ClothesID" />
+                    <input type="hidden" name="clothesName" value="@Model.ClothesName" />
+                    <input type="hidden" name="price" value="@Model.Price" />
+                    <input type="hidden" name="mainImage" id="mainImageHidden" value="@Model.UrlImage" />
+                    <input type="hidden" name="userId" value="@userId" />
 
+                    <input type="hidden" name="size" id="selectedSize" />
+                    <input type="hidden" name="color" id="selectedColor" />
+                    <button type="submit" class="btn btn-danger mt-3" style="width:100%; height:50px; font-size:20px;" onclick="setSelectedValues();">Thêm vào giỏ hàng</button>
+                </form>
                 <!-- Thêm vào phần mô tả với toggle ẩn/hiện -->
                 <div class="accordion mt-5" id="accordionExample">
                     <div class="accordion-item bg-light">
@@ -224,90 +234,97 @@
                     </div>
                 </div>
 
-                <form action="@Url.Action("AddToCart", "Cart")" method="post" onsubmit="return validateForm()">
-                    <input type="hidden" name="clothesId" value="@Model.ClothesID" />
-                    <input type="hidden" name="clothesName" value="@Model.ClothesName" />
-                    <input type="hidden" name="price" value="@Model.Price" />
-                    <input type="hidden" name="mainImage" id="mainImageHidden" value="@Model.UrlImage" />
-                    <input type="hidden" name="userId" value="@userId" />
+                @*<form action="@Url.Action("AddToCart", "Cart")" method="post" onsubmit="return validateForm()">
+                        <input type="hidden" name="clothesId" value="@Model.ClothesID" />
+                        <input type="hidden" name="clothesName" value="@Model.ClothesName" />
+                        <input type="hidden" name="price" value="@Model.Price" />
+                        <input type="hidden" name="mainImage" id="mainImageHidden" value="@Model.UrlImage" />
+                        <input type="hidden" name="userId" value="@userId" />
 
-                    <input type="hidden" name="size" id="selectedSize" />
-                    <input type="hidden" name="color" id="selectedColor" />
-                    <button type="submit" class="btn btn-primary mt-3" onclick="setSelectedValues();">Thêm vào giỏ hàng</button>
-                </form>
+                        <input type="hidden" name="size" id="selectedSize" />
+                        <input type="hidden" name="color" id="selectedColor" />
+                        <button type="submit" class="btn btn-primary mt-3" onclick="setSelectedValues();">Thêm vào giỏ hàng</button>
+                    </form>*@
             </div>
         </div>
     </div>
     <div class="container-fluid mt-5" style="margin-top: 200px">
         <div class="fw-bold h5">Gợi ý mua cùng</div>
-        <div class="d-flex overflow-hidden">
+        <div class="d-flex overflow-hidden" id="goiysanpham">
             @foreach (var item in ViewBag.Clothes)
             {
-                <div class="col-3 mt-3 me-3">
-                    <div class="card border-0">
-                        <div class="card-body p-0 position-relative" onmouseleave="hideSizes(this)">
-                            <!-- Main image -->
-                            <a href="@Url.Action("Index", "ClothesDetail", new { id = item.ClothesItem.ClothesID })">
-                                <img id="mainImage_@item.ClothesItem.ClothesID" class="mainImage img-fluid rounded" src="@item.ClothesItem.UrlImage" alt="Product Image" onmouseenter="showInsert(this)">
-                            </a>
-                            <!-- Insert div -->
-                            <div class="insert bg-light text-center p-2 position-absolute bottom-0 start-50 translate-middle-x mb-3 rounded btn btn-light border-0 hover-overlay" style="width: 90%;" onclick="toggleDiv(this)">
-                                Thêm vào giỏ hàng
-                            </div>
-                            <!-- Sizes div -->
-                            <div class="sizes bg-light text-center p-2 position-absolute bottom-0 start-50 translate-middle-x mb-3 rounded toggle-div" style="width: 90%; display: none;">
-                                Thêm vào giỏ hàng
-                                <div class="d-flex justify-content-center" id="sizeContainer_@item.ClothesItem.ClothesID">
-                                    @foreach (var size in item.Sizes)
+                <div class="col-3 mt-3 mb-3">
+                    <form action="@Url.Action("AddToCart", "Cart")" method="post">
+                        <div class="card border-0 m-2 d-flex flex-column-reverse">
+                            <div class="card-footer border-0 p-0">
+                                <div class="d-flex flex-row mt-3 mb-2">
+                                    @foreach (var color in item.Colors)
                                     {
-                                        var specificImages = (List<ClothesStore.Models.Clothes_Color_Size>)item.Clothes_Color_Sizes;
-                                        var colorID = specificImages.FirstOrDefault(clo => clo.SizeID == size.SizeID)?.ColorID;
-
-                                        <div class="btn bg-white m-2 size-option" data-color="@colorID">
-                                            @size.SizeName
+                                        var specificImages = (List<ClothesStore.Models.Image>)item.Images;
+                                        var imgUrl = specificImages.FirstOrDefault(img => img.ColorID == color.ColorID)?.UrlMainImg;
+                                        var imageWithOrderOne = specificImages.FirstOrDefault(img => img.ColorID == color.ColorID && img.ImageOrder == 1);
+                                        <div class="me-2">
+                                            <input type="radio" class="btn-check" name="color" id="@color.ColorID" value="@color.ColorID"
+                                                   autocomplete="off" onclick="changeImageAndSizes(this, '@item.ClothesItem.ClothesID')" data-color-id="@color.ColorID"
+                                                   data-img-url="@imgUrl"
+                                                   @(imageWithOrderOne != null ? "checked" : "")>
+                                            <label class="btn rounded-circle d-flex justify-content-center align-items-center" for="@color.ColorID" style="width: 20px; height: 25px;">
+                                                <img src="@color.UrlImage" alt="@color.ColorName" class="rounded-circle" style="width: 20px; height: 20px;">
+                                            </label>
                                         </div>
                                     }
                                 </div>
+                                <div class="mb-2">
+                                    <a class="@Url.Action("Index", "ClothesDetail", new { id = item.ClothesItem.ClothesID })" href="#" style="text-decoration:none">
+                                        <p class="card-text" style="color:black">@item.ClothesItem.ClothesName</p>
+                                    </a>
+                                </div>
+                                <div class="mb-2">
+                                    <span><strong>@item.ClothesItem.Price đ</strong></span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="card-footer border-0 p-0">
-                            <div class="d-flex flex-row mt-3 mb-2">
-                                @foreach (var color in item.Colors)
-                                {
-                                    var specificImages = (List<ClothesStore.Models.Image>)item.Images;
-                                    var imgUrl = specificImages.FirstOrDefault(img => img.ColorID == color.ColorID)?.UrlMainImg;
-                                    var imageWithOrderOne = specificImages.FirstOrDefault(img => img.ColorID == color.ColorID && img.ImageOrder == 1);
-                                    <div class="me-2">
-                                        <input type="radio"
-                                               class="btn-check"
-                                               name="color_@item.ClothesItem.ClothesID"
-                                               id="color_@item.ClothesItem.ClothesID-@color.ColorID"
-                                               autocomplete="off"
-                                               onclick="changeImageAndSizes(this, '@item.ClothesItem.ClothesID')"
-                                               data-color-id="@color.ColorID"
-                                               data-img-url="@imgUrl"
-                                               @(imageWithOrderOne != null ? "checked" : "")>
-                                        <label class="btn rounded-circle d-flex justify-content-center align-items-center"
-                                               for="color_@item.ClothesItem.ClothesID-@color.ColorID"
-                                               style="width: 20px; height: 25px;">
-                                            <img src="@color.UrlImage"
-                                                 alt=""
-                                                 class="rounded-circle"
-                                                 style="width: 20px; height: 20px;">
-                                        </label>
-                                    </div>
-                                }
-                            </div>
-                            <div class="mb-2">
-                                <a class="@Url.Action("Index", "ClothesDetail", new { id = item.ClothesItem.ClothesID })" href="#">
-                                    <p class="card-text">@item.ClothesItem.ClothesName</p>
+                            <div class="card-body p-0 position-relative" onmouseleave="hideSizes(this)">
+                                @*Main image*@
+                                <a href="@Url.Action("Index", "ClothesDetail", new { id = item.ClothesItem.ClothesID })">
+                                    <img id="mainImage_@item.ClothesItem.ClothesID" class="mainImage img-fluid rounded" src="@item.ClothesItem.UrlImage" alt="Product Image" onmouseenter="showInsert(this)">
                                 </a>
-                            </div>
-                            <div class="mb-2">
-                                <span><strong>@item.ClothesItem.Price.ToString("C0", CultureInfo.GetCultureInfo("vi-VN"))</strong></span>
+                                @*Hidden inputs for product data*@
+                                <input type="hidden" name="clothesId" value="@item.ClothesItem.ClothesID">
+                                <input type="hidden" name="clothesName" value="@item.ClothesItem.ClothesName">
+                                <input type="hidden" name="mainImage" value="@item.ClothesItem.UrlImage">
+                                <input type="hidden" name="price" value="@item.ClothesItem.Price">
+
+                                @*Insert div*@
+                                <div class="insert bg-light text-center p-2 position-absolute bottom-0 start-50 translate-middle-x mb-3 rounded btn btn-light border-0 hover-overlay" style="width: 90%;" onclick="toggleDiv(this)">
+                                    Thêm vào giỏ hàng
+                                </div>
+                                @*Sizes div*@
+                                <div class="sizes bg-light text-center p-2 position-absolute bottom-0 start-50 translate-middle-x mb-3 rounded toggle-div" style="width: 90%; display: none;">
+                                    Thêm vào giỏ hàng
+                                    <div class="d-flex flex-row justify-content-center" id="sizeContainer_@item.ClothesItem.ClothesID">
+                                        <div class="col-9 d-flex flex-wrap">
+                                            @foreach (var size in item.Sizes)
+                                            {
+                                                var specificImages = (List<ClothesStore.Models.Clothes_Color_Size>)item.Clothes_Color_Sizes;
+                                                var colorID = specificImages.FirstOrDefault(clo => clo.SizeID == size.SizeID)?.ColorID;
+                                                <div class="btn bg-white size-option p-0"
+                                                     style="margin-left:5px; margin-top:5px; width:40px; height:40px; display:flex; justify-content:center; align-items:center;"
+                                                     data-color="@colorID">
+                                                    <input type="radio" class="btn-check" name="size" id="size_@size.SizeID" value="@size.SizeName" autocomplete="off">
+                                                    <label class="btn btn-outline-primary m-0 p-0 d-flex justify-content-center align-items-center"
+                                                           style="width:100%; height:100%; white-space:nowrap;"
+                                                           for="size_@size.SizeID">
+                                                        @size.SizeName
+                                                    </label>
+                                                </div>
+                                            }
+                                        </div>
+                                        <button type="submit" class="btn btn-primary p-0 col-3" style="width:50px; margin:8px 0"><i class="bi bi-cart"></i></button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             }
         </div>
@@ -318,10 +335,6 @@
 @section footer {
     <script>
         var isLoggedIn = @((Session["UserId"] != null) ? "true" : "false");
-
-        function showSuccessMessage() {
-            alert("Sản phẩm đã được thêm vào giỏ hàng.");
-        }
 
         function toggleContent(id) {
             var content = document.getElementById(id);
@@ -420,6 +433,19 @@
                 updateSizes(firstColorInput); // Hiển thị size tương ứng
             }
         }
+        $(document).ready(function () {
+            $('#goiysanpham').slick({
+                slidesToShow: 4,
+                slidesToScroll: 1,
+                draggable: true,
+                infinite: true,
+                autoplay: true,
+                autoplaySpeed: 3000,
+                swipeToSlide: true,
+                speed: 600, // Tốc độ chuyển đổi giữa các slide (ms)
+                touchThreshold: 10 // Tăng độ nhạy khi kéo hoặc vuốt
+            });
+        });
     </script>
 }
 

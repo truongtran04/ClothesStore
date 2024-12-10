@@ -36,6 +36,7 @@ namespace ClothesStore.Models
         public string ClothingTypeID { get; set; }
         public string ClothingStyleID { get; set; }
         public Nullable<bool> IsDeleted { get; set; }
+        public int StockQuantity { get; set; }
     
         public virtual Category Category { get; set; }
         public virtual ClothingType ClothingType { get; set; }
