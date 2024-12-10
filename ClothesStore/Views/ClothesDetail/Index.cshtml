@@ -66,6 +66,7 @@
         insertDiv.style.display = 'block';
     }
 </script>
+
 <div class="container mt-3" style="margin-top: 150px">
     <div style="height: 10px;"></div>
     <div class="container-fluid mt-2">
@@ -253,9 +254,9 @@
         <div class="d-flex overflow-hidden" id="goiysanpham">
             @foreach (var item in ViewBag.Clothes)
             {
-                <div class="col-3 mt-3 mb-3">
+                <div class="col-3 m-3">
                     <form action="@Url.Action("AddToCart", "Cart")" method="post">
-                        <div class="card border-0 m-2 d-flex flex-column-reverse">
+                        <div class="card border-0 d-flex flex-column-reverse">
                             <div class="card-footer border-0 p-0">
                                 <div class="d-flex flex-row mt-3 mb-2">
                                     @foreach (var color in item.Colors)
@@ -264,14 +265,25 @@
                                         var imgUrl = specificImages.FirstOrDefault(img => img.ColorID == color.ColorID)?.UrlMainImg;
                                         var imageWithOrderOne = specificImages.FirstOrDefault(img => img.ColorID == color.ColorID && img.ImageOrder == 1);
                                         <div class="me-2">
-                                            <input type="radio" class="btn-check" name="color" id="@color.ColorID" value="@color.ColorID"
-                                                   autocomplete="off" onclick="changeImageAndSizes(this, '@item.ClothesItem.ClothesID')" data-color-id="@color.ColorID"
+                                            <input type="radio"
+                                                   class="btn-check"
+                                                   name="color_@item.ClothesItem.ClothesID"
+                                                   id="color_@item.ClothesItem.ClothesID-@color.ColorID"
+                                                   autocomplete="off"
+                                                   onclick="changeImageAndSizes(this, '@item.ClothesItem.ClothesID')"
+                                                   data-color-id="@color.ColorID"
                                                    data-img-url="@imgUrl"
                                                    @(imageWithOrderOne != null ? "checked" : "")>
-                                            <label class="btn rounded-circle d-flex justify-content-center align-items-center" for="@color.ColorID" style="width: 20px; height: 25px;">
-                                                <img src="@color.UrlImage" alt="@color.ColorName" class="rounded-circle" style="width: 20px; height: 20px;">
+                                            <label class="btn rounded-circle d-flex justify-content-center align-items-center"
+                                                   for="color_@item.ClothesItem.ClothesID-@color.ColorID"
+                                                   style="width: 20px; height: 25px;">
+                                                <img src="@color.UrlImage"
+                                                     alt=""
+                                                     class="rounded-circle"
+                                                     style="width: 20px; height: 20px;">
                                             </label>
                                         </div>
+
                                     }
                                 </div>
                                 <div class="mb-2">
@@ -310,15 +322,16 @@
                                                 <div class="btn bg-white size-option p-0"
                                                      style="margin-left:5px; margin-top:5px; width:40px; height:40px; display:flex; justify-content:center; align-items:center;"
                                                      data-color="@colorID">
-                                                    <input type="radio" class="btn-check" name="size" id="size_@size.SizeID" value="@size.SizeName" autocomplete="off">
+                                                    <input type="radio" class="btn-check" name="size" id="size_@item.ClothesItem.ClothesID-@size.SizeID" value="@size.SizeName" autocomplete="off">
                                                     <label class="btn btn-outline-primary m-0 p-0 d-flex justify-content-center align-items-center"
                                                            style="width:100%; height:100%; white-space:nowrap;"
-                                                           for="size_@size.SizeID">
+                                                           for="size_@item.ClothesItem.ClothesID-@size.SizeID">
                                                         @size.SizeName
                                                     </label>
                                                 </div>
                                             }
                                         </div>
+
                                         <button type="submit" class="btn btn-primary p-0 col-3" style="width:50px; margin:8px 0"><i class="bi bi-cart"></i></button>
                                     </div>
                                 </div>
@@ -385,14 +398,14 @@
             var selectedSize = document.getElementById('selectedSize').value;
             var selectedColor = document.getElementById('selectedColor').value;
             if (!selectedSize || !selectedColor) {
-                alert("Vui lòng chọn màu sắc và kích thước trước khi thêm vào giỏ hàng.");
+                showAlert("Vui lòng chọn màu sắc và kích thước trước khi thêm vào giỏ hàng.");
                 return false;
             }
 
             if (isLoggedIn) {
                 showSuccessMessage();
             } else {
-                alert("Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.");
+                showAlert("Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.");
             }
 
             return true;

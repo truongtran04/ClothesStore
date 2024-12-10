@@ -213,7 +213,28 @@
 </div>
 <script>
     var totalCartPrice = parseInt("@ViewBag.TotalAmount".replace(/\./g, ''));
+    function showAlert(message, type = 'error') {
+        const alertContainer = $('#alert-container');
+        const alertId = `alert_${Date.now()}`;
+        const alertElement = $(`
+    <div id="${alertId}" class="custom-alert ${type}">
+        ${message}
+    </div>
+`);
 
+        alertContainer.append(alertElement);
+        alertContainer.show();
+
+        // Tự động ẩn sau 3 giây
+        setTimeout(() => {
+            $(`#${alertId}`).fadeOut(500, function () {
+                $(this).remove();
+                if (alertContainer.children().length === 0) {
+                    alertContainer.hide();
+                }
+            });
+        }, 3000);
+    }
     function updateQuantity(uniqueId, change, price) {
         var quantityInput = document.getElementById("quantity_" + uniqueId);
         var currentQuantity = parseInt(quantityInput.value);
@@ -240,9 +261,9 @@
                         if (response.success) {
                             document.querySelector("li.list-group-item:has(#quantity_" + uniqueId + ")").remove();
                             updateTotalCartPrice();
-                            alert("Sản phẩm đã được xóa");
+                            showAlert(response.message, 'success');
                         } else {
-                            alert(response.message);
+                            showAlert(response.message, 'error');
                         }
                     },
                     error: function(xhr, status, error) {
@@ -308,28 +329,7 @@
 
         $("#totalCartPrice").text(formattedTotal);
     }
-    function showAlert(message, type = 'error') {
-        const alertContainer = $('#alert-container');
-        const alertId = `alert_${Date.now()}`;
-        const alertElement = $(`
-    <div id="${alertId}" class="custom-alert ${type}">
-        ${message}
-    </div>
-`);
 
-        alertContainer.append(alertElement);
-        alertContainer.show();
-
-        // Tự động ẩn sau 3 giây
-        setTimeout(() => {
-            $(`#${alertId}`).fadeOut(500, function () {
-                $(this).remove();
-                if (alertContainer.children().length === 0) {
-                    alertContainer.hide();
-                }
-            });
-        }, 3000);
-    }
     $(document).on('submit', 'form', function (e) {
         e.preventDefault(); // Ngăn trình duyệt gửi form theo cách mặc định
 
