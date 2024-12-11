@@ -18,52 +18,11 @@
         }
     </style>
 }
-@section footer{
-    <script>
-        function changeImageAndSizes(colorInput, clothesId) {
-            // Cập nhật ảnh chính dựa trên màu đã chọn
-            const newImageSrc = colorInput.getAttribute('data-img-url');
-            document.getElementById('mainImage_' + clothesId).src = newImageSrc;
-
-            // Lấy ID màu được chọn từ input hiện tại
-            const selectedColor = colorInput.getAttribute('data-color-id');
-
-            // Nhắm mục tiêu container chứa các size cho sản phẩm hiện tại
-            const sizeContainer = document.getElementById('sizeContainer_' + clothesId);
-
-            // Duyệt qua từng tùy chọn size và chỉ hiển thị các size phù hợp với màu đã chọn
-            Array.from(sizeContainer.getElementsByClassName('size-option')).forEach(function (sizeDiv) {
-                if (sizeDiv.getAttribute('data-color') === selectedColor) {
-                    sizeDiv.style.display = 'block';  // Hiển thị size phù hợp
-                } else {
-                    sizeDiv.style.display = 'none';   // Ẩn các size không phù hợp
-                }
-            });
-        }
-
-        // Function to toggle display for the size options
-        function toggleDiv(element) {
-            const insertDiv = element.closest('.card-body').querySelector('.insert');
-            const sizesDiv = element.closest('.card-body').querySelector('.sizes');
-            // Hide insert div and show sizes div
-            insertDiv.style.display = 'none';
-            sizesDiv.style.display = 'block';
-        }
-
-        // Hide sizes and show insert div when mouse leaves
-        function hideSizes(element) {
-            const insertDiv = element.querySelector('.insert');
-            const sizesDiv = element.querySelector('.sizes');
-            sizesDiv.style.display = 'none';
-            insertDiv.style.display = 'block';
-        }
-    </script>
-}
 
 @foreach (var item in Model)
 {
     <div class="col-3  mt-3 mb-3">
-        <form action="@Url.Action("AddToCart", "Cart")" method="post">
+        <form action="@Url.Action("AddToCart", "Cart")" method="post" class="addtocart">
             <div class="card border-0 d-flex flex-column-reverse">
                 <div class="card-footer border-0 p-0">
                     <div class="d-flex flex-row mt-3 mb-2">
@@ -138,6 +97,63 @@
     </div>
 }
 <div class="d-flex justify-content-center mt-4">
-    @Html.PagedListPager(Model, page => Url.Action("Search", new { page, searchTerm = ViewBag.SearchTerm }), PagedListRenderOptions.PageNumbersOnly)
+    @Html.PagedListPager(
+    Model,
+    page => Url.Action("Search", new { page, searchTerm = ViewBag.SearchTerm }),
+    new PagedListRenderOptions
+    {
+        Display = PagedListDisplayMode.IfNeeded,
+        DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+        DisplayLinkToLastPage = PagedListDisplayMode.Always,
+        DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+        DisplayLinkToNextPage = PagedListDisplayMode.Always,
+        LinkToFirstPageFormat = "«",
+        LinkToPreviousPageFormat = "‹",
+        LinkToNextPageFormat = "›",
+        LinkToLastPageFormat = "»",
+        MaximumPageNumbersToDisplay = 5,
+        //ContainerDivClasses = "pagination-container" // Lớp CSS cho container bên ngoài
+    }
+)
 </div>
 
+
+<script>
+    function changeImageAndSizes(colorInput, clothesId) {
+        // Cập nhật ảnh chính dựa trên màu đã chọn
+        const newImageSrc = colorInput.getAttribute('data-img-url');
+        document.getElementById('mainImage_' + clothesId).src = newImageSrc;
+
+        // Lấy ID màu được chọn từ input hiện tại
+        const selectedColor = colorInput.getAttribute('data-color-id');
+
+        // Nhắm mục tiêu container chứa các size cho sản phẩm hiện tại
+        const sizeContainer = document.getElementById('sizeContainer_' + clothesId);
+
+        // Duyệt qua từng tùy chọn size và chỉ hiển thị các size phù hợp với màu đã chọn
+        Array.from(sizeContainer.getElementsByClassName('size-option')).forEach(function (sizeDiv) {
+            if (sizeDiv.getAttribute('data-color') === selectedColor) {
+                sizeDiv.style.display = 'block';  // Hiển thị size phù hợp
+            } else {
+                sizeDiv.style.display = 'none';   // Ẩn các size không phù hợp
+            }
+        });
+    }
+
+    // Function to toggle display for the size options
+    function toggleDiv(element) {
+        const insertDiv = element.closest('.card-body').querySelector('.insert');
+        const sizesDiv = element.closest('.card-body').querySelector('.sizes');
+        // Hide insert div and show sizes div
+        insertDiv.style.display = 'none';
+        sizesDiv.style.display = 'block';
+    }
+
+    // Hide sizes and show insert div when mouse leaves
+    function hideSizes(element) {
+        const insertDiv = element.querySelector('.insert');
+        const sizesDiv = element.querySelector('.sizes');
+        sizesDiv.style.display = 'none';
+        insertDiv.style.display = 'block';
+    }
+</script>

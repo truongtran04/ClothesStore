@@ -250,5 +250,11 @@ namespace ClothesStore.Controllers
             }
             return Json(new { success = false, message = "Sản phẩm không tìm thấy." });
         }
+        public PartialViewResult GetCartPartial()
+        {
+            var cartDetails = Session["CartDetails"] as List<CartDetail> ?? new List<CartDetail>();
+            return PartialView("_CartPartial", cartDetails);
+        }
+
     }
 }

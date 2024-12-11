@@ -136,7 +136,7 @@
                                 @foreach (var item in Model.clothes.Where(clo => clo.ClothesItem.ClothingType.ClothingTypeName == "Áo khoác"))
                                 {
                                     <div class="col-4 m-3">
-                                        <form action="@Url.Action("AddToCart", "Cart")" method="post">
+                                        <form action="@Url.Action("AddToCart", "Cart")" method="post" class="addtocart">
                                             <div class="card border-0 d-flex flex-column-reverse">
                                                 <div class="card-footer border-0 p-0">
                                                     <div class="d-flex flex-row mt-3 mb-2">
@@ -245,7 +245,7 @@
                                 @foreach (var item in Model.clothes.Where(clo => clo.ClothesItem.ClothingType.ClothingTypeName == "Áo nỉ-Áo Hoodie"))
                                 {
                                     <div class="col-4 m-3">
-                                        <form action="@Url.Action("AddToCart", "Cart")" method="post">
+                                        <form action="@Url.Action("AddToCart", "Cart")" method="post" class="addtocart">
                                             <div class="card border-0 d-flex flex-column-reverse">
                                                 <div class="card-footer border-0 p-0">
                                                     <div class="d-flex flex-row mt-3 mb-2">
@@ -354,7 +354,7 @@
                                 @foreach (var item in Model.clothes.Where(clo => clo.ClothesItem.ClothingType.ClothingTypeName == "Áo len"))
                                 {
                                     <div class="col-4 m-3">
-                                        <form action="@Url.Action("AddToCart", "Cart")" method="post">
+                                        <form action="@Url.Action("AddToCart", "Cart")" method="post" class="addtocart">
                                             <div class="card border-0 d-flex flex-column-reverse">
                                                 <div class="card-footer border-0 p-0">
                                                     <div class="d-flex flex-row mt-3 mb-2">
@@ -463,7 +463,7 @@
                                 @foreach (var item in Model.clothes.Where(clo => clo.ClothesItem.ClothingType.ClothingTypeName == "Áo phông"))
                                 {
                                     <div class="col-4 m-3">
-                                        <form action="@Url.Action("AddToCart", "Cart")" method="post">
+                                        <form action="@Url.Action("AddToCart", "Cart")" method="post" class="addtocart">
                                             <div class="card border-0 d-flex flex-column-reverse">
                                                 <div class="card-footer border-0 p-0">
                                                     <div class="d-flex flex-row mt-3 mb-2">

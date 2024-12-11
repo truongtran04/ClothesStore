@@ -43,7 +43,7 @@
             </div>
 
             <div class="d-flex justify-content-center mt-5">
-                <button type="submit" class="btn btn-primary w-50 rounded-pill">Cập nhật thông tin</button>
+                <button type="submit" class="btn btn-primary w-50 rounded-pill" disabled>Cập nhật thông tin</button>
             </div>
         }
 
@@ -55,3 +55,24 @@
     </div>
    
 </div>
+<script>
+    $(document).ready(function () {
+        // Tắt nút "Lưu thông tin" khi trang được tải
+        const saveButton = $('button[type="submit"]');
+        saveButton.prop('disabled', true);
+
+        // Lưu giá trị ban đầu của form
+        const initialFormState = $('form').serialize();
+
+        // Kiểm tra sự thay đổi chỉ khi người dùng thực sự click hoặc thay đổi dữ liệu
+        $('form :input').on('click change input', function () {
+            const currentFormState = $('form').serialize();
+            // So sánh trạng thái hiện tại với trạng thái ban đầu
+            if (currentFormState !== initialFormState) {
+                saveButton.prop('disabled', false);  // Bật nút khi có thay đổi
+            } else {
+                saveButton.prop('disabled', true);  // Tắt nút nếu không có thay đổi
+            }
+        });
+    });
+</script>
