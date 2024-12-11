@@ -155,6 +155,7 @@
                     success: function(response) {
                         if (response.success) {
                             document.querySelector("li.list-group-item:has(#quantity_" + uniqueId + ")").remove();
+                            updateTotalCartPrice();
                             updateCartUI();
                             showAlert(response.message, 'success');
                         } else {
@@ -198,6 +199,27 @@
             }
         });
     }
+
+    $(document).on('click', '.update-quantity', function () {
+        const uniqueId = $(this).data('unique-id');
+        const change = $(this).data('change');
+
+        $.ajax({
+            url: '/Cart/UpdateQuantity',
+            method: 'POST',
+            data: { uniqueId: uniqueId, change: change },
+            success: function (response) {
+                if (response.success) {
+                    updateCartUI();
+                } else {
+                    showAlert(response.message, 'error');
+                }
+            },
+            error: function () {
+                showAlert('Đã xảy ra lỗi. Vui lòng thử lại.', 'error');
+            }
+        });
+    });
     function updateTotalCartPrice() {
         var total = 0;
 
@@ -259,26 +281,6 @@
             }
         });
     }
-    //$(document).on('click', '.update-quantity', function () {
-    //    const uniqueId = $(this).data('unique-id');
-    //    const change = $(this).data('change');
-
-    //    $.ajax({
-    //        url: '/Cart/UpdateQuantity',
-    //        method: 'POST',
-    //        data: { uniqueId: uniqueId, change: change },
-    //        success: function (response) {
-    //            if (response.success) {
-    //                updateCartUI();
-    //            } else {
-    //                showAlert(response.message, 'error');
-    //            }
-    //        },
-    //        error: function () {
-    //            showAlert('Đã xảy ra lỗi. Vui lòng thử lại.', 'error');
-    //        }
-    //    });
-    //});
 
     $(document).on('click', '.remove-item', function (e) {
         e.preventDefault();
