@@ -29,13 +29,15 @@ namespace ClothesStore.Controllers
             Session["CartDetails"] = cartDetails;
         }
         // Thêm sản phẩm vào giỏ hàng
-        [HttpPost]
+        //[HttpPost]
         //public ActionResult AddToCart(string clothesId, string clothesName, string color, string size, decimal price, string mainImage)
         //{
         //    // Kiểm tra người dùng đã đăng nhập chưa
         //    if (Session["UserId"] == null)
         //    {
-        //        return RedirectToAction("Login", "Account"); // Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+        //        Session["ReturnUrl"] = Request.Url.ToString(); // Lưu URL hiện tại
+        //        return Json(new { success = false, message = "Bạn cần đăng nhập để thực hiện thao tác này." });
+        //        //return RedirectToAction("Login", "Account");
         //    }
 
         //    // Lấy userId từ Session
@@ -80,70 +82,64 @@ namespace ClothesStore.Controllers
 
         //    db.SaveChanges();
 
+
         //    // Cập nhật lại TotalAmount của giỏ hàng
         //    UpdateTotalAmount(cart.CartID);
-
-        //    return RedirectToAction("Index", "Home"); // Chuyển hướng về trang chính
+        //    UpdateSessionCartDetails(cart.CartID);
+        //    return Json(new { success = true, message = $"{clothesName} đã được thêm vào giỏ hàng." });
         //}
-        // Thêm sản phẩm vào giỏ hàng
-        public ActionResult AddToCart(string clothesId, string clothesName, string color, string size, decimal price, string mainImage)
+        [HttpPost]
+        public JsonResult AddToCart(string clothesId, string clothesName, string color, string size, decimal price, string mainImage)
         {
-            // Kiểm tra người dùng đã đăng nhập chưa
-            if (Session["UserId"] == null)
+            // Kiểm tra điều kiện cơ bản
+            if (string.IsNullOrEmpty(clothesId) || string.IsNullOrEmpty(clothesName) || string.IsNullOrEmpty(color) || string.IsNullOrEmpty(size) || price <= 0)
             {
-                Session["ReturnUrl"] = Request.Url.ToString(); // Lưu URL hiện tại
-                return Json(new { success = false, message = "Bạn cần đăng nhập để thực hiện thao tác này." });
-                //return RedirectToAction("Login", "Account");
+                return Json(new { success = false, message = "Thông tin sản phẩm không hợp lệ." });
             }
 
-            // Lấy userId từ Session
-            int userId = (int)Session["UserId"];
+            if (Session["UserId"] == null)
+            {
+                return Json(new { success = false, message = "Vui lòng đăng nhập trước khi thêm sản phẩm." });
+            }
 
-            // Tìm giỏ hàng chưa hoàn tất của người dùng
+            int userId = (int)Session["UserId"];
             var cart = db.Carts.SingleOrDefault(c => c.UserID == userId && !(c.IsCompleted ?? false));
 
             if (cart == null)
             {
-                // Nếu không tìm thấy giỏ hàng, tạo mới
-                cart = new Cart { UserID = userId, TotalAmount = 0 }; // Khởi tạo TotalAmount là 0 khi tạo giỏ mới
-                db.Carts.Add(cart);
-                db.SaveChanges();
+                return Json(new { success = false, message = "Không tìm thấy giỏ hàng." });
             }
 
-            // Kiểm tra sản phẩm đã tồn tại trong CartDetail chưa
-            var cartItem = db.CartDetails.SingleOrDefault(item =>
-                item.CartID == cart.CartID && item.ClothesID == clothesId && item.ColorID == color && item.SizeName == size);
+            var existingItem = db.CartDetails.FirstOrDefault(cd => cd.CartID == cart.CartID && cd.ClothesID == clothesId && cd.ColorID == color && cd.SizeName == size);
 
-            if (cartItem == null)
+            if (existingItem != null)
             {
-                // Thêm sản phẩm mới vào CartDetail
-                cartItem = new CartDetail
+                existingItem.Quantity++; // Tăng số lượng lên một
+                existingItem.TotalPrice = existingItem.Price * existingItem.Quantity; // Cập nhật tổng giá
+            }
+            else
+            {
+                // Thêm mới sản phẩm vào giỏ hàng
+                db.CartDetails.Add(new CartDetail
                 {
                     CartID = cart.CartID,
                     ClothesID = clothesId,
                     ClothesName = clothesName,
-                    MainImage = mainImage,
-                    SizeName = size,
                     ColorID = color,
+                    SizeName = size,
+                    Price = price,
+                    MainImage = mainImage,
                     Quantity = 1,
-                    Price = price
-                };
-                db.CartDetails.Add(cartItem);
-            }
-            else
-            {
-                // Cập nhật số lượng nếu sản phẩm đã có trong giỏ
-                cartItem.Quantity += 1;
+                    TotalPrice = price // Tổng giá bằng giá sản phẩm ban đầu
+                });
             }
 
-            db.SaveChanges();
+            db.SaveChanges(); // Lưu thay đổi vào cơ sở dữ liệu
+            UpdateTotalAmount(cart.CartID); // Cập nhật tổng số tiền giỏ hàng
 
-
-            // Cập nhật lại TotalAmount của giỏ hàng
-            UpdateTotalAmount(cart.CartID);
-            UpdateSessionCartDetails(cart.CartID);
-            return Json(new { success = true, message = $"{clothesName} đã được thêm vào giỏ hàng." });
+            return Json(new { success = true, message = "Sản phẩm đã được thêm vào giỏ hàng." });
         }
+
         // Xóa sản phẩm khỏi giỏ hàng
         [HttpPost]
         //public ActionResult RemoveFromCart(string uniqueId)
@@ -254,6 +250,50 @@ namespace ClothesStore.Controllers
         {
             var cartDetails = Session["CartDetails"] as List<CartDetail> ?? new List<CartDetail>();
             return PartialView("_CartPartial", cartDetails);
+        }
+        [HttpPost]
+        public JsonResult UpdateQuantity(string uniqueId, int change)
+        {
+            // Lấy giỏ hàng từ Session
+            var cartDetails = Session["CartDetails"] as List<CartDetail>;
+            if (cartDetails == null)
+            {
+                return Json(new { success = false, message = "Giỏ hàng trống." });
+            }
+
+            // Tìm sản phẩm theo uniqueId
+            var item = cartDetails.FirstOrDefault(c =>
+                $"{c.ClothesID}_{c.ColorID}_{c.SizeName}" == uniqueId);
+
+            if (item == null)
+            {
+                return Json(new { success = false, message = "Sản phẩm không tồn tại trong giỏ hàng." });
+            }
+
+            // Cập nhật số lượng
+            item.Quantity += change;
+
+            if (item.Quantity <= 0)
+            {
+                // Nếu số lượng <= 0, xóa sản phẩm khỏi giỏ hàng
+                cartDetails.Remove(item);
+            }
+
+            // Cập nhật lại Session
+            Session["CartDetails"] = cartDetails;
+
+            // Tính tổng số lượng và tổng tiền sau khi cập nhật
+            int totalQuantity = cartDetails.Sum(c => c.Quantity);
+            decimal totalCartPrice = cartDetails.Sum(c => c.Price * c.Quantity);
+
+            return Json(new
+            {
+                success = true,
+                message = "Cập nhật số lượng thành công.",
+                totalQuantity,
+                totalCartPrice,
+                updatedQuantity = item.Quantity > 0 ? item.Quantity : 0 // Trả về số lượng đã cập nhật
+            });
         }
 
     }

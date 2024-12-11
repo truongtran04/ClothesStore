@@ -35,14 +35,15 @@
             <ul class="navbar-nav">
                 @Html.Action("_Category", "Home")
                 @*<li class="nav-item">
-                    <a href="#" class="nav-link text-uppercase fw-bold pb-2">
-                        <span>Sản phẩm mới</span>
-                    </a>
-                </li>*@@*<li class="nav-item">
-                    <a href="#" class="nav-link text-uppercase fw-bold pb-2">
-                        <span>Sản phẩm mới</span>
-                    </a>
-                </li>*@
+                        <a href="#" class="nav-link text-uppercase fw-bold pb-2">
+                            <span>Sản phẩm mới</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link text-uppercase fw-bold pb-2">
+                            <span>Sản phẩm mới</span>
+                        </a>
+                    </li>*@
             </ul>
         </div>
         <div class="d-flex flex-row me-3">
@@ -98,14 +99,14 @@
         <h5 id="cartOffcanvasLabel">Giỏ hàng của bạn</h5>
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
-    <div class="offcanvas-body">       
+    <div class="offcanvas-body">
         @Html.Partial("_CartPartial")
     </div>
 </div>
 <div id="alert-container" style="position: fixed; top: 80px; left: 20px; z-index: 1050; display: none;">
 </div>
 <script>
-    
+
 
     var totalCartPrice = parseInt("@ViewBag.TotalAmount".replace(/\./g, ''));
     function showAlert(message, type = 'error') {
@@ -130,7 +131,20 @@
             });
         }, 3000);
     }
-    function updateQuantity(uniqueId, change, price) {
+    function updateCartUI() {
+        $.ajax({
+            url: '/Cart/GetCartPartial',
+            type: 'GET',
+            success: function (partialView) {
+                $('#cart-section').html(partialView);
+            },
+            error: function () {
+                showAlert('Không thể tải lại giỏ hàng.', 'error');
+            }
+        });
+    }
+
+    @*function updateQuantity(uniqueId, change, price) {
         var quantityInput = document.getElementById("quantity_" + uniqueId);
         var currentQuantity = parseInt(quantityInput.value);
         var newQuantity = currentQuantity + change;
@@ -219,7 +233,8 @@
                 showAlert('Đã xảy ra lỗi. Vui lòng thử lại.', 'error');
             }
         });
-    });
+    });*@
+
     function updateTotalCartPrice() {
         var total = 0;
 
@@ -258,8 +273,9 @@
             data: formData,
             success: function (response) {
                 if (response.success) {
-                    updateCartUI();
                     showAlert(response.message, 'success');
+                    updateCartUI();
+                    updateTotalCartPrice();
                 } else {
                     showAlert(response.message, 'error'); // Hiển thị thông báo lỗi
                 }
@@ -269,18 +285,6 @@
             }
         });
     });
-    function updateCartUI() {
-        $.ajax({
-            url: '/Cart/GetCartPartial',
-            type: 'GET',
-            success: function (partialView) {
-                $('#cart-section').html(partialView);
-            },
-            error: function () {
-                showAlert('Không thể tải lại giỏ hàng.', 'error');
-            }
-        });
-    }
 
     $(document).on('click', '.remove-item', function (e) {
         e.preventDefault();
@@ -307,6 +311,39 @@
         });
         }
     });
+    $(document).on('click', '.update-quantity', function (e) {
+        e.preventDefault();
+        var button = $(this);
+        var uniqueId = button.data('unique-id');
+        var change = button.data('change'); // Dùng để xác định số tăng hoặc giảm
+
+        var quantityInput = $(`#quantity_${uniqueId}`);
+        var newQuantity = parseInt(quantityInput.val()) + change;
+
+        if (newQuantity > 0) {
+            $.ajax({
+                url: '@Url.Action("UpdateCart", "Cart")',
+                type: 'POST',
+                data: { uniqueId: uniqueId, quantity: newQuantity },
+                success: function (response) {
+                    if (response.success) {
+                        quantityInput.val(newQuantity);
+                        updateCartUI();
+                        showAlert(response.message, 'success');
+                        updateTotalCartPrice();
+                    } else {
+                        showAlert(response.message, 'error');
+                    }
+                },
+                error: function () {
+                    showAlert('Đã xảy ra lỗi. Vui lòng thử lại.', 'error');
+                }
+            });
+        } else {
+            showAlert('Số lượng không hợp lệ.', 'error');
+        }
+    });
+
 </script>
 
 @*<script>
